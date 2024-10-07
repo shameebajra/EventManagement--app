@@ -22,6 +22,7 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
+            "name"=>"required|string",
             "email" => "required|email|unique:users,email",
             "phone_number" => "required|numeric|digits:10", 
             "password" => "required|string|min:6|max:15",
@@ -33,6 +34,8 @@ class RegisterRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'name.required' => 'The name is required.',
+            'name.string' => 'The name must be a valid string.',
             'email.required' => 'The email address is required.',
             'email.email' => 'Please enter a valid email address.',
             'email.unique' => 'This email address is already in use.',

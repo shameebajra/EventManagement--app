@@ -9,7 +9,7 @@
 <div class="mx-auto md:h-screen flex flex-col justify-center items-center px-6 pt-8 pt:mt-0">
     <a href="" class="text-2xl font-semibold flex justify-center items-center mb-8 lg:mb-10">
         {{-- <img src="/images/logo.svg" class="h-10 mr-4" alt="Windster Logo"> --}}
-        <span class="self-center text-2xl font-bold whitespace-nowrap">EVENTS NP</span> 
+        <span class="self-center text-2xl lg:text-3xl font-bold whitespace-nowrap">EVENTS NP</span> 
     </a>
     <!-- Card -->
     <div class="bg-white shadow rounded-lg md:mt-0 w-full sm:max-w-screen-sm xl:p-0">
@@ -17,7 +17,7 @@
                         <!-- Success Message -->
                       
 
-            <h2 class="text-2xl lg:text-3xl font-bold text-gray-900">
+            <h2 class="text-2xl font-bold text-gray-900">
                 Sign in to platform
             </h2>
             <form class="mt-8 space-y-6" action="{{route('login')}}" method="POST">

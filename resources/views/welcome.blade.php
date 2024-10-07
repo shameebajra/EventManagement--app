@@ -1,1 +1,1 @@
-<h1>Hello </h1>
+<h1>Hello {{session('role_id')}} </h1>
