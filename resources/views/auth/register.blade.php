@@ -7,6 +7,10 @@
 </head>
 <body>
 <div class="mx-auto md:h-screen flex flex-col justify-center items-center px-6 pt-8 pt:mt-0">
+    <a href="" class="text-2xl font-semibold flex justify-center items-center mb-8 lg:mb-10">
+        {{-- <img src="/images/logo.svg" class="h-10 mr-4" alt="Windster Logo"> --}}
+        <span class="self-center text-2xl font-bold whitespace-nowrap">EVENTS NP</span> 
+    </a>
     <!-- Card -->
     <div class="bg-white shadow rounded-lg md:mt-0 w-full sm:max-w-screen-sm xl:p-0">
         <div class="p-6 sm:p-8 lg:p-16 space-y-8">
@@ -63,7 +67,7 @@
                 </button>
                 
                 <div class="text-sm font-medium text-gray-500">
-                    Already have an account? <a href="" class="text-teal-500 hover:underline">Login here</a>
+                    Already have an account? <a href="{{route('login.form')}}" class="text-teal-500 hover:underline">Login here</a>
                 </div>
             </form>
         </div>
