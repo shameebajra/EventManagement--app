@@ -13,15 +13,14 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
             $table->string('phone_number');
             $table->foreignId('role_id')
-            ->default(2)
-            ->constrained('roles')  // Set the foreign key constraint with cascade rule
-            ->onDelete('cascade')   // Cascade delete: when a role is deleted, related users are deleted
-            ->onUpdate('cascade');  // Cascade update: when a role id is updated, update in users table
+            ->default(3)
+            ->constrained('roles')  
+            ->onDelete('cascade') 
+            ->onUpdate('cascade'); 
         $table->timestamps();
         });
     }
