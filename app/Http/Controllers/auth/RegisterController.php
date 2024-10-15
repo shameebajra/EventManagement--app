@@ -20,16 +20,14 @@ class RegisterController extends Controller
         if ($request->is('register')) {
             $roleId = 2; 
         } if ($request->is('register/super-admin')) {
-            $roleId = 1; // Super admin role id
+            $roleId = 1;
         } elseif ($request->is('register/vendor')) {
-            $roleId = 3; // Vendor role id
+            $roleId = 3;
         }
 
 
         try {
-            // Check if roleId is set before creating the user
-            if ($roleId !== null) {
-                // Create the user
+                 if ($roleId !== null) {       
                 User::create([
                     'email' => $request->email,
                     'name'=> $request->name,
@@ -38,7 +36,6 @@ class RegisterController extends Controller
                     'role_id' => $roleId, 
                 ]);
 
-                // Redirect based on the registration route
                 if ($request->is('register/super-admin')) {
                     return redirect('/register/super-admin')->with('success', 'Registration successful! Please log in.');
                 } elseif ($request->is('register/vendor')) {
@@ -50,7 +47,6 @@ class RegisterController extends Controller
                 return redirect()->back()->withErrors(['error' => 'Invalid registration route.']);
             }
         } catch (QueryException $e) {
-            // Catch database-related exceptions
             return redirect()->back()->withErrors(['error' => 'There was an issue with the database. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->back()->withErrors(['error' => 'An unexpected error occurred. Please try again later.']);

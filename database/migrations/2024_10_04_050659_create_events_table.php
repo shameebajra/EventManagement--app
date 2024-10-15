@@ -17,6 +17,7 @@ return new class extends Migration
             ->constrained('users')
             ->onDelete('cascade')
             ->onUpdate('cascade');
+        $table->string('poster');
         $table->string('event_name');
         $table->string('event_type');
         $table->text('event_details');

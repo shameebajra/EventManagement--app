@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('layouts.app');
 });
 
 
@@ -34,3 +34,10 @@ Route::post('/register/vendor', [RegisterController::class, 'register'])->name('
 //Login
 Route::view('/login','auth.login')->name('login.form');
 Route::post('/login',[LoginController::class,'login'])->name('login');
+
+//Vendor
+Route::view('/vendor/events','vendor.events');
+Route::view('/vendor/add/events','vendor.addEvents');
+Route::view('/vendor/add/events/detail','vendor.eventDetail');
+Route::view('/vendor/dashboard','vendor.dashboard');
+

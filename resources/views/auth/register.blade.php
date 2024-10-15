@@ -47,7 +47,7 @@
 
 
                     @elseif(request()->is('register/vendor'))
-                    <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Organizer name" value="{{ old('name') }}">
+                    <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Organizev r name" value="{{ old('name') }}">
                     
                     <!-- Error Message for Email -->
                     @error('name')
