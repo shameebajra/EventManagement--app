@@ -12,25 +12,23 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('purchased_tickets', function (Blueprint $table) {
+
             $table->id();
             $table->foreignId('user_id')
                 ->constrained('users')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+
             $table->foreignId('ticket_id')
                 ->constrained('ticket_types')
                 ->onDelete('cascade')
-                ->onUpdate('cascade');
-
-                $table->foreignId('promo_code_id')
-                ->constrained('promo_codes')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+                ->onUpdate('cascade')
+                ->name('fk_ticket_id');
 
             $table->string('name');
             $table->string('email');
-            $table->string('phone_number')->nullable();
-            $table->float('total');
+            $table->string('phone_number');
+            $table->decimal('total', 10, 2);
             $table->timestamps();
         });
     }

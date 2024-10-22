@@ -23,18 +23,6 @@
 
     {{-- Include Scripts --}}
     @include('partials.scripts')
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const modalToggleButtons = document.querySelectorAll('[data-modal-toggle]');
-            const modals = document.querySelectorAll('.modal');
-    
-            modalToggleButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const targetModal = document.getElementById(button.getAttribute('data-modal-toggle'));
-                    targetModal.classList.toggle('hidden'); // Show/Hide the modal
-                });
-            });
-        });
-    </script> --}}
+  
 </body>
 </html>

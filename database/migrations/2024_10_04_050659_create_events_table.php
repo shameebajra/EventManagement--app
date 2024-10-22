@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')
             ->constrained('users')
             ->onDelete('cascade')
-            ->onUpdate('cascade');
+            ->onUpdate('cascade')
+            ->index();
         $table->string('poster');
         $table->string('event_name');
         $table->string('event_type');
@@ -25,7 +26,8 @@ return new class extends Migration
         $table->string('venue');
         $table->date('date');
         $table->time('time');
-        $table->enum('event_status', ['active', 'cancelled', 'postponed'])->default('active');
+        $table->enum('event_status', ['active', 'cancelled', 'postponed','inactive'])->default('active');
+        $table->string('terms')->nullable();
         $table->timestamps();
         });
     }

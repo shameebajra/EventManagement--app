@@ -16,9 +16,10 @@ return new class extends Migration
             $table->foreignId('user_id')
                 ->constrained('users')
                 ->onDelete('cascade')
-                ->onUpdate('cascade');
+                ->onUpdate('cascade')
+                ->index();
             $table->string('logo')->nullable();
-            $table->string('address')->nullable();
+            $table->string('address');
             $table->timestamps();
         });
     }

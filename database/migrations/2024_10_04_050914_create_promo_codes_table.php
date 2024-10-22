@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId('event_id')
             ->constrained('events')
             ->onDelete('cascade')
-            ->onUpdate('cascade');
+            ->onUpdate('cascade')
+            ->index();
         $table->string('promo_code');
         $table->date('valid_until')->nullable();
             $table->timestamps();

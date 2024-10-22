@@ -9,13 +9,13 @@ class TicketType extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'ticket_name',
         'ticket_type',
         'quantity',
         'price',
+        'event_id',
+
     ];
 
     protected $hidden=[
-        'event_id',
     ];
 }

@@ -4,7 +4,7 @@
 <div class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5">
     <div class="mb-1 w-full">
         <div class="mb-4">
-        
+
             <h1 class="text-xl sm:text-2xl font-semibold text-gray-900">All Events</h1>
         </div>
         <div class="block sm:flex items-center md:divide-x md:divide-gray-100">
@@ -15,7 +15,7 @@
                 </div>
             </form>
             <div class="flex items-center sm:justify-end w-full">
-                
+
                 <button type="button" data-modal-toggle="add-product-modal" class="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center rounded-lg text-sm px-3 py-2 text-center sm:ml-auto">
                     <svg class="-ml-1 mr-2 h-6 w-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
                     Add product
@@ -53,15 +53,15 @@
                             <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase">
                                 Status
                             </th>
-                            
-                        
+
+
                             <th scope="col" class="p-4">
                             </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($events as $event)
-                       
+
                         <tr class="hover:bg-gray-100">
                             <td class="p-4 w-4">
                                 <div class="flex items-center">
@@ -94,16 +94,16 @@
                                 </a>
 
                                 <!-- Link to edit the event (GET method) -->
-                                <a href="{{ route('events.edit', $event->id) }}" class="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
+                                <a href="" class="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
                                     <svg class="mr-2 h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
                                         <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path>
                                     </svg>
-                                    Edit
+                                   Tickets Purchased
                                 </a>
 
                               <!-- Link to delete the event (triggers confirmation modal) -->
-                                <form action="{{ route('events.delete', $event->id) }}" method="POST" style="display:inline;">
+                                <form action="{{route('superadmin.event.delete',$event->id)}}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" onclick="return confirm('Are you sure you want to delete this event?');" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
@@ -115,7 +115,7 @@
                                 </form>
                             </td>
                         </tr>
-                    @endforeach           
+                    @endforeach
                     </tbody>
                 </table>
             </div>
@@ -149,3 +149,6 @@
 
 
 @endsection
+
+
+

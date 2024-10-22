@@ -8,7 +8,7 @@
 <body>
 <div class="mx-auto md:h-screen flex flex-col justify-center items-center px-6 pt-8 pt:mt-0">
     <a href="" class="text-2xl font-semibold flex justify-center items-center mb-8 lg:mb-10">
-        {{-- <img src="/images/logo.svg" class="h-10 mr-4" alt="Windster Logo"> --}}
+        <img width="30" height="30" src="https://img.icons8.com/ios/50/ticket--v1.png" alt="ticket--v1"/>
         <span class="self-center text-2xl lg:text-3xl font-bold whitespace-nowrap">EVENTS NP</span> 
     </a>
     <!-- Card -->

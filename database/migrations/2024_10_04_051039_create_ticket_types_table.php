@@ -16,9 +16,17 @@ return new class extends Migration
             $table->foreignId('event_id')
                 ->constrained('events')
                 ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->string('ticket_name');
-            $table->enum('ticket_type', ['general', 'VIP', 'student']);
+                ->onUpdate('cascade')
+                ->index();
+            $table->enum('ticket_type', [
+                'general',
+                'VIP',
+                'early_bird',
+                'student',
+                'group',
+                'family_pass',
+                'sponsorship',
+            ]);
             $table->integer('quantity');
             $table->float('price');
             $table->timestamps();

@@ -18,11 +18,11 @@ class RegisterController extends Controller
 
         $roleId = null; 
         if ($request->is('register')) {
-            $roleId = 2; 
+            $roleId = 3; 
         } if ($request->is('register/super-admin')) {
             $roleId = 1;
         } elseif ($request->is('register/vendor')) {
-            $roleId = 3;
+            $roleId = 2;
         }
 
 

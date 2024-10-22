@@ -21,7 +21,8 @@ return new class extends Migration
             ->default(3)
             ->constrained('roles')  
             ->onDelete('cascade') 
-            ->onUpdate('cascade'); 
+            ->onUpdate('cascade')
+            ->index(); 
         $table->timestamps();
         });
     }

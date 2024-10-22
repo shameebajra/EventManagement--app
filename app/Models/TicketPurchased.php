@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PurchasedTicket extends Model
+class TicketPurchased extends Model
 {
     protected $fillable = [
         'name',
@@ -14,5 +14,6 @@ class PurchasedTicket extends Model
         'total',
         'user_id',
         'ticket_id',
+        // 'promo_code_id'
     ];
 }

@@ -17,11 +17,22 @@ class Event extends Model
         'venue',
         'date',
         'time',
-        'ticket_type',
+        'poster',    
+        'terms',        
         'event_status',
-    ];
-
-    protected $hidden =[
         'user_id',
     ];
+
+    public function ticketTypes()
+    {
+        return $this->hasMany(TicketType::class); 
+    }
+
+
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }
