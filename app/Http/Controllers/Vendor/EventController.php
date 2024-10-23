@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -38,16 +39,21 @@ class EventController extends Controller
     public function store(EventRequest $request)
     {
         try {
+            DB::beginTransaction();
             $user_id = Session::get('user_id'); // Get the user ID from the session
             $poster = null;
 
-            // Handle file upload if present
-            if ($request->hasFile('poster')) {
-                $poster = $request->file('poster')->store(path: 'resources/images/poster');
-            }
+            $poster = $request->poster;
 
+            if ($poster){
+                $extention = $poster->getClientOriginalExtension();
+                $posterName = time(). '.'.$extention;
+                $poster->move(public_path('/images/eventPoster'),$posterName);
+            } else {
+                $posterName = "0.png";
+            }
             // Create event
-            $event = Event::create([
+            $event = Event::create ([
                 'event_name' => $request->event_name,
                 'event_type' => $request->event_type,
                 'event_details' => $request->event_details,
@@ -57,7 +63,7 @@ class EventController extends Controller
                 'time' => $request->time,
                 'event_status' => $request->event_status,
                 'terms' => $request->terms,
-                'poster' => $poster,
+                'poster' => $posterName,
                 'user_id' => $user_id,
             ]);
 
@@ -71,10 +77,14 @@ class EventController extends Controller
                 ]);
             }
 
+            DB::commit();
+
             return redirect()->back()->with('success', 'Event created successfully!');
 
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error('Failed event creation: ' . $e->getMessage());
+
             return redirect()->back()->with('error', 'Event creation unsuccessful!');
         }catch (QueryException $e) {
             return redirect()->back()->withErrors(['error' => 'There was an issue with the database. Please try again later.']);
@@ -89,7 +99,33 @@ class EventController extends Controller
     public function show()
     {
         $events = Event::where('user_id',session('user_id'))->get();
+
         return view('vendor.events', compact('events'));
+    }
+
+    public function showEventDetail(string $id)
+    {
+        try {
+            $user_id = Session::get('user_id');
+            $event = Event::with('ticketTypes')->findOrFail($id);
+
+            if ($event->user_id !== $user_id) {
+                return redirect()->back()->with('error', 'Unauthorized action. You cannot view this event.');
+            }
+
+            $ticketTypes = TicketType::where('event_id', $event->id)->get();
+
+            return view('vendor.eventDetail', compact('event', 'ticketTypes'));
+        } catch (ModelNotFoundException $e) {
+            Log::error('Event not found: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Event not found!');
+        } catch (QueryException $e) {
+            Log::error('Database error: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'There was an issue retrieving the event. Please try again later.');
+        }
+
     }
 
     /**
@@ -110,9 +146,11 @@ class EventController extends Controller
             return view('vendor.editEvent', compact('event', 'ticketTypes'));
         } catch (ModelNotFoundException $e) {
             Log::error('Event not found: ' . $e->getMessage());
+
             return redirect()->back()->with('error', 'Event not found!');
         } catch (QueryException $e) {
             Log::error('Database error: ' . $e->getMessage());
+
             return redirect()->back()->with('error', 'There was an issue retrieving the event. Please try again later.');
         }
 
@@ -124,29 +162,26 @@ class EventController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            // Get the user ID from the session
+            DB::beginTransaction();
+
             $user_id = Session::get('user_id');
 
-            // Find the event by ID
             $event = Event::with('ticketTypes')->findOrFail($id);
 
-            // Check if the user ID matches the session ID
             if ($event->user_id !== $user_id) {
                 return redirect()->back()->with('error', 'Unauthorized action. You cannot update this event.');
             }
 
-            // Handle file upload if a new poster is uploaded
-            $poster = $event->poster; // Keep the existing poster by default
-            if ($request->hasFile('poster')) {
-                // Delete the old poster if it exists
-                if ($poster) {
-                    Storage::delete($poster);
-                }
-                // Store the new poster
-                $poster = $request->file('poster')->store('resources/images/poster');
+            $poster = $request->poster;
+            if ($poster){
+                $extention = $poster->getClientOriginalExtension();
+                $posterName = time(). '.'.$extention;
+                $poster->move(public_path('/images/eventPoster'),$posterName);
+            }else {
+                $posterName = "0.png";
             }
 
-            // Update event details
+            // Update event
             $event->update([
                 'event_name'    => $request->event_name,
                 'event_type'    => $request->event_type,
@@ -162,9 +197,7 @@ class EventController extends Controller
 
             // Update ticket types
             foreach ($request->ticket_types as $ticket) {
-                // Check if ticket ID is set for updates
                 if (isset($ticket['id'])) {
-                    // Update existing ticket type
                     $ticketType = TicketType::where('id', $ticket['id'])
                         ->where('event_id', $event->id) // Ensure it belongs to the correct event
                         ->first();
@@ -177,7 +210,7 @@ class EventController extends Controller
                         ]);
                     }
                 } else {
-                    // Create a new ticket type if no ID is provided
+                    // Create a new ticket
                     TicketType::create([
                         'event_id'    => $event->id,
                         'ticket_type' => $ticket['ticket_type'],
@@ -187,18 +220,28 @@ class EventController extends Controller
                 }
             }
 
+            DB::commit();
             return redirect()->back()->with('success', 'Event updated successfully!');
 
         } catch (QueryException $e) {
+            DB::rollBack();
+
             Log::error('Database error during event update: ' . $e->getMessage());
+
             return redirect()->back()->withErrors(['error' => 'There was an issue with the database. Please try again later.']);
 
         } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+
             Log::error('Event not found: ' . $e->getMessage());
+
             return redirect()->back()->with('error', 'Event not found!');
 
         } catch (Exception $e) {
+            DB::rollBack();
+
             Log::error('Failed event update: ' . $e->getMessage());
+
             return redirect()->back()->with('error', 'Event update unsuccessful!');
         }
     }
@@ -209,37 +252,62 @@ class EventController extends Controller
      */
     public function destroy(string $id)
     {
+        DB::beginTransaction();
         try {
-            // Get the user ID from the session
             $user_id = Session::get('user_id');
 
-            // Find the event by ID
             $event = Event::findOrFail($id);
 
-            // Check if the event belongs to the current user
             if ($event->user_id !== $user_id) {
                 return redirect()->back()->with('error', 'Unauthorized action. You cannot delete this event.');
             }
 
-            // Delete associated ticket types
+
             $event->ticketTypes()->delete();
-            // Delete the event
             $event->delete();
+
+            DB::commit();
 
             return redirect()->back()->with('success', value: 'Event deleted successfully!');
 
         } catch (ModelNotFoundException $e) {
+            DB::rollback();
+
             Log::error('Event not found: ' . $e->getMessage());
+
             return redirect()->back()->with('error', 'Event not found!');
 
         } catch (QueryException $e) {
+            DB::rollback();
+
             Log::error('Database error during event deletion: ' . $e->getMessage());
+
             return redirect()->back()->withErrors(['error' => 'There was an issue with the database. Please try again later.']);
 
         } catch (Exception $e) {
+            DB::rollback();
+
             Log::error('Failed event deletion: ' . $e->getMessage());
+
             return redirect()->back()->with('error', 'Event deletion unsuccessful!');
         }
+    }
+
+
+    public function search(Request $request){
+        $search = $request->search;
+        $userId = session('user_id');
+
+        // Combine both conditions: filter by user_id and search query for event_name
+        $events = Event::where('user_id', $userId)
+                    ->when($search, function($query, $search) {
+                        return $query->where('event_name', 'like', "%{$search}%");
+                    })
+                    ->get();
+
+        // Return the view with the filtered events and search term
+        return view('vendor.events', compact('events'))->with('search', $search);
+
     }
 
     }

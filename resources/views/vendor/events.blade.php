@@ -4,18 +4,19 @@
 <div class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5">
     <div class="mb-1 w-full">
         <div class="mb-4">
-        
+
             <h1 class="text-xl sm:text-2xl font-semibold text-gray-900">All Events</h1>
         </div>
         <div class="block sm:flex items-center md:divide-x md:divide-gray-100">
-            <form class="sm:pr-3 mb-4 sm:mb-0" action="#" method="GET">
+            <form class="sm:pr-3 mb-4 sm:mb-0" action="{{route('event.search')}}" method="GET">
+                @csrf
                 <label for="products-search" class="sr-only">Search</label>
                 <div class="mt-1 relative sm:w-64 xl:w-96">
-                <input type="text" name="email" id="products-search" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Search for products">
+                <input type="text" name="search" id="search" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Search here"   value="{{ isset($search) ? $search : '' }}">
                 </div>
             </form>
             <div class="flex items-center sm:justify-end w-full">
-                
+
                 <button type="button" data-modal-toggle="add-product-modal" class="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center rounded-lg text-sm px-3 py-2 text-center sm:ml-auto">
                     <svg class="-ml-1 mr-2 h-6 w-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
                     Add product
@@ -53,15 +54,15 @@
                             <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase">
                                 Status
                             </th>
-                            
-                        
+
+
                             <th scope="col" class="p-4">
                             </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach ($events as $event)
-                       
+
                         <tr class="hover:bg-gray-100">
                             <td class="p-4 w-4">
                                 <div class="flex items-center">
@@ -70,9 +71,8 @@
                                 </div>
                             </td>
                             <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                {{-- <img class="h-10 w-10 rounded-full" src="{{ asset('storage/app/ . $event->poster) }}" alt="poster"> --}}
-                                <img class="h-10 w-10 rounded-full" src="{{ asset('storage/' . $event->poster) }}" alt="poster">
-
+                                {{-- <img class="h-10 w-10 rounded-full" src="{{ asset('/storage/app/' . $event->poster) }}" alt="poster"> --}}
+                                <img class="h-10 w-10 rounded-full" src="{{asset('/images/eventPoster/'. $event->poster )}}" alt="poster">
                                 <div class="text-base font-semibold text-gray-900">{{ $event->event_name }}</div>
                                 <div class="text-sm font-normal text-gray-500">{{ $event->event_type}}</div>
                             </td>
@@ -115,7 +115,7 @@
                                 </form>
                             </td>
                         </tr>
-                    @endforeach           
+                    @endforeach
                     </tbody>
                 </table>
             </div>

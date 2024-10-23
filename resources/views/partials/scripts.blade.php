@@ -5,7 +5,7 @@
       const toggleButtons = document.querySelectorAll('[data-modal-toggle="add-user-modal"]');
       const closeButtons = document.querySelectorAll('[data-modal-close="add-user-modal"]');
       const body = document.body;
-  
+
       // Open modal on toggle button click
       toggleButtons.forEach(button => {
           button.addEventListener('click', function () {
@@ -13,7 +13,7 @@
               body.classList.toggle('modal-open');
           });
       });
-  
+
       // Close modal on close button click
       closeButtons.forEach(button => {
           button.addEventListener('click', function () {
@@ -21,7 +21,7 @@
               body.classList.remove('modal-open');
           });
       });
-  
+
       // Optional: Close the modal when clicking outside the modal content
       window.addEventListener('click', function (event) {
           if (event.target === modal) {
@@ -29,7 +29,7 @@
               body.classList.remove('modal-open');
           }
       });
-  
+
      // Add ticket type dynamically
       document.getElementById('add-ticket-type').addEventListener('click', function () {
           const container = document.getElementById('ticket-types-container');
@@ -67,15 +67,15 @@
       });
 
   });
-  
+
   // Function to open modal and populate fields with user data
   function openModal(user) {
       // Populate input fields with user data
-      document.getElementById('company-name').value = user.company_name || ''; 
+      document.getElementById('company-name').value = user.company_name || '';
       document.getElementById('email').value = user.email || '';
       document.getElementById('phone-number').value = user.phone_number || '';
       document.getElementById('address').value = user.address || '';
-      
+
       // Show the modal
       document.getElementById('add-user-modal').classList.remove('hidden');
   }
@@ -88,7 +88,7 @@
     setTimeout(() => {
       // Apply CSS transition for a smooth fade-out
       flashMessage.style.transition = 'opacity 0.5s ease-out';
-      flashMessage.style.opacity = '0'; 
+      flashMessage.style.opacity = '0';
 
       // Remove the message from the DOM after fade-out (500ms)
       setTimeout(() => flashMessage.remove(), 500);
@@ -127,6 +127,17 @@
             L.marker([27.7172, 85.3240]).addTo(map)
                 .bindPopup('Kathmandu, Nepal')
                 .openPopup();
+        });
+
+        //get data for view model
+        $(document).on('click','.userView',function(){
+            var _this = $(this).parents('tr');
+            $('#v_company-name').val(_this.find('.id').text());
+            $('#v_email').val(_this.find('.id').text());
+            $('#v_phone-number').val(_this.find('.id').text());
+            $('#v_address').val(_this.find('.id').text());
+            $('#v_logo').val(_this.find('.id').text());
+
         });
 </script>
 

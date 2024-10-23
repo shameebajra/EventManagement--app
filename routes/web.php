@@ -56,7 +56,7 @@ Route::middleware(['checkVendor'])->group(function() {
     Route::prefix('vendor')->group(function() {
         Route::view('/events', 'vendor.events');
         Route::view('/add/events', 'vendor.addEvents');
-        Route::view('/add/events/detail', 'vendor.eventDetail');
+        Route::view('/events/detail', 'vendor.eventDetail');
         Route::view('/dashboard', 'vendor.dashboard');
 
         Route::controller(EventController::class)->group(function() {
@@ -64,7 +64,13 @@ Route::middleware(['checkVendor'])->group(function() {
             Route::get('/events', 'show')->name('vendor.events');
             Route::get('/events/edit/{id}', 'edit')->name('events.edit');
             Route::put('/events/edit/{id}', 'update')->name('events.update');
-            Route::delete('/events/delete/{id}', 'destroy')->name('events.delete'); // Fixed naming here
+            Route::delete('/events/delete/{id}', 'destroy')->name('events.delete');
+
+            //search
+            Route::get('/event/search', 'show')->name('event.search');
+
+
+
         });
 
         // Profile Update Routes
@@ -72,7 +78,16 @@ Route::middleware(['checkVendor'])->group(function() {
             Route::get('/profile', 'getUser')->name('profile.show');
             Route::post('/profile/update', 'updateProfile')->name('profile.update');
         });
+
+        //transaction
+        Route::view('/transaction','vendor.transaction');
+
+
+        //search
+
     });
+
+
 });
 
 
@@ -84,6 +99,7 @@ Route::middleware(['checkAdmin'])->group(function(){
             Route::delete('/events/delete/{id}','destroy')->name('superadmin.event.delete');
             Route::get('/users','getUsers');
             Route::get('/dashboard','index');
+
 
         });
     });
