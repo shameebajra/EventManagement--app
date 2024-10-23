@@ -172,13 +172,24 @@ class EventController extends Controller
                 return redirect()->back()->with('error', 'Unauthorized action. You cannot update this event.');
             }
 
-            $poster = $request->poster;
-            if ($poster){
-                $extention = $poster->getClientOriginalExtension();
-                $posterName = time(). '.'.$extention;
-                $poster->move(public_path('/images/eventPoster'),$posterName);
-            }else {
-                $posterName = "0.png";
+
+            // Handling poster upload
+            if ($request->hasFile('poster')) {
+                $poster = $request->file('poster');
+                $extension = $poster->getClientOriginalExtension();
+                $posterName = time() . '.' . $extension;
+                $poster->move(public_path('/images/eventPoster'), $posterName);
+
+                // If a new poster is uploaded, delete the old one (optional)
+                if ($event->poster && $event->poster !== "0.png") {
+                    $oldPosterPath = public_path('/images/eventPoster/' . $event->poster);
+                    if (file_exists($oldPosterPath)) {
+                        unlink($oldPosterPath); // Delete the old poster file
+                    }
+                }
+            } else {
+                // Keep the old poster if no new poster is uploaded
+                $posterName = $event->poster;
             }
 
             // Update event
@@ -192,7 +203,7 @@ class EventController extends Controller
                 'time'          => $request->time,
                 'event_status'  => $request->event_status,
                 'terms'         => $request->terms,
-                'poster'        => $poster,
+                'poster'        => $posterName,
             ]);
 
             // Update ticket types

@@ -66,6 +66,9 @@ Route::middleware(['checkVendor'])->group(function() {
             Route::put('/events/edit/{id}', 'update')->name('events.update');
             Route::delete('/events/delete/{id}', 'destroy')->name('events.delete');
 
+            Route::get('/events/detail/{id}', 'showEventDetail')->name('event.detail');
+
+
             //search
             Route::get('/event/search', 'show')->name('event.search');
 
