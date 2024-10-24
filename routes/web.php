@@ -19,11 +19,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-
+// Landing page
 Route::get('/', [LandingPageController::class, 'showEvent']);
 
 // Register Routes
@@ -72,9 +68,6 @@ Route::middleware(['checkVendor'])->group(function() {
 
             //search
             Route::get('/event/search', 'search')->name('event.search');
-
-
-
         });
 
         // Profile Update Routes
@@ -85,13 +78,7 @@ Route::middleware(['checkVendor'])->group(function() {
 
         //transaction
         Route::view('/transaction','vendor.transaction');
-
-
-        //search
-
     });
-
-
 });
 
 
@@ -105,17 +92,8 @@ Route::middleware(['checkAdmin'])->group(function(){
             Route::get('/dashboard','index');
 
             Route::get('/events/detail/{id}', 'showEventDetail')->name('superadmin.event.detail');
-
-
-
         });
     });
 });
 
 
-
-
-
-Route::get('/test', function(){
-return view('index');
-});

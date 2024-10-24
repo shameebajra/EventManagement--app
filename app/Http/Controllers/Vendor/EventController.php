@@ -98,7 +98,7 @@ class EventController extends Controller
      */
     public function show()
     {
-        $events = Event::where('user_id',session('user_id'))->orderBy('updated_at', 'asc')->first()->get();
+        $events = Event::where('user_id',session('user_id'))->latest('updated_at')->first()->get();
 
         return view('vendor.events', compact('events'));
     }
@@ -296,7 +296,7 @@ class EventController extends Controller
         $events = Event::where('user_id', $userId)
                     ->when($search, function($query, $search) {
                         return $query->where('event_name', 'ilike', "%{$search}%");
-                    })->orderBy('updated_at', 'desc')->first()->get();
+                    })->latest('updated_at')->first()->get();
 
         return view('vendor.events', compact('events'))->with('search', $search);
 

@@ -8,17 +8,7 @@
         <p>Address: 123 Event Street, City, Country</p>
       </div>
 
-      <!-- Useful Links -->
-      <div>
-        <h3 class="text-lg font-bold mb-4">Useful Links</h3>
-        <ul class="space-y-2">
-          <li><a href="#" class="hover:underline">Home</a></li>
-          <li><a href="#" class="hover:underline">Events</a></li>
-          <li><a href="#" class="hover:underline">Blog</a></li>
-          <li><a href="#" class="hover:underline">Contact Us</a></li>
-          <li><a href="#" class="hover:underline">About Us</a></li>
-        </ul>
-      </div>
+
 
       <!-- Social Media -->
       <div>

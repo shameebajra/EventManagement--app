@@ -1,6 +1,27 @@
 @extends('layouts.landing_app')
 
 @section('content')
+
+<!-- Latest Events Section -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-8">Latest Events</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach($latestEvents as $event)
+        <!-- Event Card -->
+        <div class="bg-white rounded-lg shadow-lg p-5">
+          <img src="{{ asset('/images/eventPoster/' . $event->poster) }}" alt="{{ $event->event_name }}" class="rounded-lg mb-4">
+          <div class="text-gray-800 text-xl font-bold">{{ $event->event_name }}</div>
+          <div class="text-gray-600">{{ \Carbon\Carbon::parse($event->date)->format('d M') }}</div>
+          <div class="text-pink-500 text-2xl font-bold">Rs. {{ number_format($event->price) }}</div>
+          <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full">Book Now</button>
+        </div>
+        @endforeach
+      </div>
+    </div>
+  </section>
+
+
   <!-- Featured Events Section -->
   <section class="py-16 bg-gray-50">
     <div class="container mx-auto">
@@ -56,22 +77,5 @@
     </div>
   </section>
 
-  <!-- Upcoming Events Section -->
-  <section class="py-16 bg-white">
-    <div class="container mx-auto">
-      <h2 class="text-3xl font-bold text-center mb-8">Upcoming Events</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @foreach($events as $event)
-        <!-- Event Card -->
-        <div class="bg-white rounded-lg shadow-lg p-5">
-          <img src="{{ asset('/images/eventPoster/' . $event->poster) }}" alt="{{ $event->event_name }}" class="rounded-lg mb-4">
-          <div class="text-gray-800 text-xl font-bold">{{ $event->event_name }}</div>
-          <div class="text-gray-600">{{ \Carbon\Carbon::parse($event->date)->format('d M') }}</div>
-          <div class="text-pink-500 text-2xl font-bold">Rs. {{ number_format($event->price) }}</div>
-          <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full">Book Now</button>
-        </div>
-        @endforeach
-      </div>
-    </div>
-  </section>
+
 @endsection
