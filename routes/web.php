@@ -70,7 +70,7 @@ Route::middleware(['checkVendor'])->group(function() {
 
 
             //search
-            Route::get('/event/search', 'show')->name('event.search');
+            Route::get('/event/search', 'search')->name('event.search');
 
 
 
@@ -102,6 +102,9 @@ Route::middleware(['checkAdmin'])->group(function(){
             Route::delete('/events/delete/{id}','destroy')->name('superadmin.event.delete');
             Route::get('/users','getUsers');
             Route::get('/dashboard','index');
+
+            Route::get('/events/detail/{id}', 'showEventDetail')->name('superadmin.event.detail');
+
 
 
         });

@@ -80,12 +80,12 @@
       <div class="col-span-1">
         <label for="event_status" class="block text-sm font-medium text-gray-700">Event Status</label>
         <select name="event_status" id="event_status" class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-          <option value="">Select Status</option>          
+          <option value="">Select Status</option>
           <option value="active" {{ old('event_status', $event->event_status) == 'active' ? 'selected' : '' }}>Active</option>
           <option value="postponed" {{ old('event_status', $event->event_status) == 'postponed' ? 'selected' : '' }}>Postponed</option>
           <option value="cancelled" {{ old('event_status', $event->event_status) == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
           <option value="inactive" {{ old('event_status', $event->event_status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
-        </select> 
+        </select>
         @error('event_status')
         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
         @enderror
@@ -101,29 +101,32 @@
       </div>
 
      <!-- Tickets Section -->
-      <div class="col-span-3">
+     <div class="col-span-3">
         <label for="ticket_types" class="block text-xl font-medium text-gray-700">Tickets</label>
 
-        <div id="ticket-types-container" class="grid grid-cols-3 gap-6 mt-4">
+        <div id="ticket-types-container" class="grid grid-cols-1 gap-6 mt-4">
             @foreach ($ticketTypes as $index => $ticketType)
-            <div class="ticket-type col-span-3 grid grid-cols-3 gap-6">
+            <div class="ticket-type grid grid-cols-4 gap-4 items-center"> <!-- Reduced gap to gap-4 -->
+
+                <!-- Ticket Type -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Ticket Type</label>
                     <select name="ticket_types[{{ $index }}][ticket_type]" class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                      <option value="">Select Ticket Type</option>
-                      <option value="general" {{ old('ticket_types.'.$index.'.ticket_type', $ticketType->ticket_type) == 'general' ? 'selected' : '' }}>General Admission</option>
-                      <option value="VIP" {{ old('ticket_types.'.$index.'.ticket_type', $ticketType->ticket_type) == 'VIP' ? 'selected' : '' }}>VIP</option>
-                      <option value="early_bird" {{ old('ticket_types.'.$index.'.ticket_type', $ticketType->ticket_type) == 'early_bird' ? 'selected' : '' }}>Early Bird</option>
-                      <option value="student" {{ old('ticket_types.'.$index.'.ticket_type', $ticketType->ticket_type) == 'student' ? 'selected' : '' }}>Student</option>
-                      <option value="group" {{ old('ticket_types.'.$index.'.ticket_type', $ticketType->ticket_type) == 'group' ? 'selected' : '' }}>Group</option>
-                      <option value="family_pass" {{ old('ticket_types.'.$index.'.ticket_type', $ticketType->ticket_type) == 'family_pass' ? 'selected' : '' }}>Family Pass</option>
-                      <option value="sponsorship" {{ old('ticket_types.'.$index.'.ticket_type', $ticketType->ticket_type) == 'sponsorship' ? 'selected' : '' }}>Sponsorship</option>
-                  </select>
-                  @error('ticket_types.'.$index.'.ticket_type')
-                  <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                  @enderror
+                        <option value="">Select Ticket Type</option>
+                        <option value="general" {{ old('ticket_types.'.$index.'.ticket_type', $ticketType->ticket_type) == 'general' ? 'selected' : '' }}>General Admission</option>
+                        <option value="VIP" {{ old('ticket_types.'.$index.'.ticket_type', $ticketType->ticket_type) == 'VIP' ? 'selected' : '' }}>VIP</option>
+                        <option value="early_bird" {{ old('ticket_types.'.$index.'.ticket_type', $ticketType->ticket_type) == 'early_bird' ? 'selected' : '' }}>Early Bird</option>
+                        <option value="student" {{ old('ticket_types.'.$index.'.ticket_type', $ticketType->ticket_type) == 'student' ? 'selected' : '' }}>Student</option>
+                        <option value="group" {{ old('ticket_types.'.$index.'.ticket_type', $ticketType->ticket_type) == 'group' ? 'selected' : '' }}>Group</option>
+                        <option value="family_pass" {{ old('ticket_types.'.$index.'.ticket_type', $ticketType->ticket_type) == 'family_pass' ? 'selected' : '' }}>Family Pass</option>
+                        <option value="sponsorship" {{ old('ticket_types.'.$index.'.ticket_type', $ticketType->ticket_type) == 'sponsorship' ? 'selected' : '' }}>Sponsorship</option>
+                    </select>
+                    @error('ticket_types.'.$index.'.ticket_type')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
+                <!-- Ticket Price -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Ticket Price</label>
                     <input type="number" name="ticket_types[{{ $index }}][price]" value="{{ old('ticket_types.'.$index.'.price', $ticketType->price) }}" placeholder="Price (e.g. 50.00)" class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -132,6 +135,7 @@
                     @enderror
                 </div>
 
+                <!-- Ticket Quantity -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Quantity</label>
                     <input type="number" name="ticket_types[{{ $index }}][quantity]" value="{{ old('ticket_types.'.$index.'.quantity', $ticketType->quantity) }}" placeholder="Quantity (e.g. 100)" class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -139,6 +143,14 @@
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
+
+                <!-- Trash Icon (Delete Button) -->
+                <div class="flex items-center justify-center w-10"> <!-- Reduced width -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="delete" width="46" height="46" class="text-red-500 hover:text-red-700 cursor-pointer">
+                        <path d="M24.2,12.193,23.8,24.3a3.988,3.988,0,0,1-4,3.857H12.2a3.988,3.988,0,0,1-4-3.853L7.8,12.193a1,1,0,0,1,2-.066l.4,12.11a2,2,0,0,0,2,1.923h7.6a2,2,0,0,0,2-1.927l.4-12.106a1,1,0,0,1,2,.066Zm1.323-4.029a1,1,0,0,1-1,1H7.478a1,1,0,0,1,0-2h3.1a1.276,1.276,0,0,0,1.273-1.148,2.991,2.991,0,0,1,2.984-2.694h2.33a2.991,2.991,0,0,1,2.984,2.694,1.276,1.276,0,0,0,1.273,1.148h3.1A1,1,0,0,1,25.522,8.164Zm-11.936-1h4.828a3.3,3.3,0,0,1-.255-.944,1,1,0,0,0-.994-.9h-2.33a1,1,0,0,0-.994.9A3.3,3.3,0,0,1,13.586,7.164Zm1.007,15.151V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Zm4.814,0V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Z"></path>
+                    </svg>
+                </div>
+
             </div>
             @endforeach
         </div>
@@ -147,7 +159,10 @@
         <button type="button" id="add-ticket-type" class="mt-4 inline-flex justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:text-sm">
             Add Ticket Type
         </button>
-      </div>
+    </div>
+
+
+
 
       <!-- Poster Upload -->
       <div class="col-span-1">

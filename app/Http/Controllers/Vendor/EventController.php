@@ -144,14 +144,12 @@ class EventController extends Controller
             $ticketTypes = TicketType::where('event_id', $event->id)->get();
 
             return view('vendor.editEvent', compact('event', 'ticketTypes'));
-        } catch (ModelNotFoundException $e) {
-            Log::error('Event not found: ' . $e->getMessage());
+        } catch (Exception $e) {
+            DB::rollback();
 
-            return redirect()->back()->with('error', 'Event not found!');
-        } catch (QueryException $e) {
-            Log::error('Database error: ' . $e->getMessage());
+            Log::error('Failed event deletion: ' . $e->getMessage());
 
-            return redirect()->back()->with('error', 'There was an issue retrieving the event. Please try again later.');
+            return redirect()->back()->with('error', 'Event deletion unsuccessful!');
         }
 
     }
@@ -159,7 +157,7 @@ class EventController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(EventRequest $request, string $id)
     {
         try {
             DB::beginTransaction();
@@ -168,10 +166,10 @@ class EventController extends Controller
 
             $event = Event::with('ticketTypes')->findOrFail($id);
 
+            // Check if the user is authorized to update this event
             if ($event->user_id !== $user_id) {
                 return redirect()->back()->with('error', 'Unauthorized action. You cannot update this event.');
             }
-
 
             // Handling poster upload
             if ($request->hasFile('poster')) {
@@ -207,8 +205,12 @@ class EventController extends Controller
             ]);
 
             // Update ticket types
+            $existingTicketIds = [];
+
+            // Loop through ticket types to update or create
             foreach ($request->ticket_types as $ticket) {
                 if (isset($ticket['id'])) {
+                    // Existing ticket, update it
                     $ticketType = TicketType::where('id', $ticket['id'])
                         ->where('event_id', $event->id) // Ensure it belongs to the correct event
                         ->first();
@@ -220,42 +222,38 @@ class EventController extends Controller
                             'price'       => $ticket['price'],
                         ]);
                     }
+
+                    // Add the updated ticket ID to the existing array
+                    $existingTicketIds[] = $ticket['id'];
                 } else {
-                    // Create a new ticket
-                    TicketType::create([
+                    // Create a new ticket if it doesn't already exist
+                    $newTicketType = TicketType::create([
                         'event_id'    => $event->id,
                         'ticket_type' => $ticket['ticket_type'],
                         'quantity'    => $ticket['quantity'],
                         'price'       => $ticket['price'],
                     ]);
+
+                    // Keep track of the newly created ticket ID
+                    $existingTicketIds[] = $newTicketType->id;
                 }
             }
+
+            // Delete any ticket types that were not included in the request
+            TicketType::where('event_id', $event->id)
+                ->whereNotIn('id', $existingTicketIds)
+                ->delete();
 
             DB::commit();
             return redirect()->back()->with('success', 'Event updated successfully!');
 
-        } catch (QueryException $e) {
-            DB::rollBack();
-
-            Log::error('Database error during event update: ' . $e->getMessage());
-
-            return redirect()->back()->withErrors(['error' => 'There was an issue with the database. Please try again later.']);
-
-        } catch (ModelNotFoundException $e) {
-            DB::rollBack();
-
-            Log::error('Event not found: ' . $e->getMessage());
-
-            return redirect()->back()->with('error', 'Event not found!');
-
         } catch (Exception $e) {
             DB::rollBack();
-
             Log::error('Failed event update: ' . $e->getMessage());
-
-            return redirect()->back()->with('error', 'Event update unsuccessful!');
+            return view('vendor.events')->with('error', 'Event update unsuccessful!');
         }
     }
+
 
 
     /**
@@ -281,20 +279,6 @@ class EventController extends Controller
 
             return redirect()->back()->with('success', value: 'Event deleted successfully!');
 
-        } catch (ModelNotFoundException $e) {
-            DB::rollback();
-
-            Log::error('Event not found: ' . $e->getMessage());
-
-            return redirect()->back()->with('error', 'Event not found!');
-
-        } catch (QueryException $e) {
-            DB::rollback();
-
-            Log::error('Database error during event deletion: ' . $e->getMessage());
-
-            return redirect()->back()->withErrors(['error' => 'There was an issue with the database. Please try again later.']);
-
         } catch (Exception $e) {
             DB::rollback();
 
@@ -306,17 +290,15 @@ class EventController extends Controller
 
 
     public function search(Request $request){
-        $search = $request->search;
+        $search = $request->input('search');
         $userId = session('user_id');
 
-        // Combine both conditions: filter by user_id and search query for event_name
         $events = Event::where('user_id', $userId)
                     ->when($search, function($query, $search) {
-                        return $query->where('event_name', 'like', "%{$search}%");
+                        return $query->where('event_name', 'ilike', "%{$search}%");
                     })
                     ->get();
 
-        // Return the view with the filtered events and search term
         return view('vendor.events', compact('events'))->with('search', $search);
 
     }

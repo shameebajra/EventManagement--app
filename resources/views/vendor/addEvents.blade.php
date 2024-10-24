@@ -51,12 +51,6 @@
       <div class="col-span-1">
         <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
         <input type="text" name="location" id="location" value="{{ old('location') }}" class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-       {{-- map here --}}
-       Map
-        <div id="map">
-
-          </div> 
-
         @error('location')
         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
         @enderror
@@ -84,12 +78,12 @@
       <div class="col-span-1">
         <label for="event_status" class="block text-sm font-medium text-gray-700">Event Status</label>
         <select name="event_status" id="event_status" class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-          <option value="">Select Status</option>          
+          <option value="">Select Status</option>
           <option value="active" {{ old('event_status') == 'active' ? 'selected' : '' }}>Active</option>
           <option value="postponed" {{ old('event_status') == 'postponed' ? 'selected' : '' }}>Postponed</option>
           <option value="cancelled" {{ old('event_status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
           <option value="inactive" {{ old('event_status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
-        </select> 
+        </select>
         @error('event_status')
         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
         @enderror
@@ -125,7 +119,7 @@
                   @error('ticket_types.0.ticket_type')
                   <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                   @enderror
-                 
+
                 </div>
 
                 <div>

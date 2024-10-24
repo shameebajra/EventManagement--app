@@ -74,7 +74,7 @@
 
                                         </td>
                                         <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                            <div  class="bg-pink-500 text-white font-bold py-2 px-4 rounded-lg">Rs.{{ $ticketType->price}}</div>
+                                            <div  class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-lg">Rs.{{ $ticketType->price}}</div>
 
 
                                         </td>
