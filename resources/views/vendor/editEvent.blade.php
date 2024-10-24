@@ -171,12 +171,26 @@
             <div class="space-y-1 text-center">
                 <input id="poster" name="poster" type="file" class="file-input">
                 <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+
+                {{-- Display previously uploaded poster if it exists --}}
+                @if(isset($event->poster) && $event->poster)
+                    <img src="{{ asset('/images/eventPoster/' . $event->poster) }}" class="w-full h-48 object-cover" alt="poster">
+                    <p class="text-sm text-gray-700 mt-2">Previously uploaded file: {{ $event->poster }}</p>
+                @endif
+
+                {{-- Show old value if a new file is uploaded --}}
+                @if(old('poster'))
+                    <p class="text-sm text-gray-700 mt-2">New file selected: {{ old('poster') }}</p>
+                @endif
             </div>
         </div>
         @error('poster')
             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
         @enderror
-      </div>
+    </div>
+
+
+
 
       <!-- Terms & Conditions -->
       <div class="col-span-2">

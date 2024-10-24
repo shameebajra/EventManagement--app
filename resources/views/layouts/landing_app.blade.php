@@ -1,6 +1,6 @@
 @include('landing_partials.header')
 
-<body class="bg-gray-50">
+<body class="font-sans">
 
     <!-- Header / Navigation Bar -->
     @include('landing_partials.navbar')

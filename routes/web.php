@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\LandingPage\LandingPageController;
 use App\Http\Controllers\Superadmin\SuperadminEventController;
 use App\Http\Controllers\Vendor\EventController;
 use App\Http\Controllers\Vendor\UpdateProfileController;
@@ -18,12 +19,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 
-
+Route::get('/', [LandingPageController::class, 'showEvent']);
 
 // Register Routes
 Route::prefix('register')->group(function() {
