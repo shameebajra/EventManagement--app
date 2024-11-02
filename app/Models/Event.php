@@ -17,22 +17,23 @@ class Event extends Model
         'venue',
         'date',
         'time',
-        'poster',    
-        'terms',        
+        'poster',
+        'terms',
         'event_status',
         'user_id',
     ];
 
     public function ticketTypes()
     {
-        return $this->hasMany(TicketType::class); 
+        return $this->hasMany(TicketType::class);
     }
 
 
-    
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
 
 }

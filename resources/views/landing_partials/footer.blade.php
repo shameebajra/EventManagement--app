@@ -1,3 +1,47 @@
+
+  <!-- Include FontAwesome for Icons -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <!-- Modal JavaScript -->
+  <script>
+    const bookNowBtn = document.getElementById('bookNowBtn');
+    const bookingModal = document.getElementById('bookingModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const decreaseBtn = document.getElementById('decrease');
+    const increaseBtn = document.getElementById('increase');
+    const ticketCountEl = document.getElementById('ticketCount');
+    const totalPriceEl = document.getElementById('totalPrice');
+
+    let ticketCount = 1;
+    const ticketPrice = 500;
+
+    // Show modal
+    bookNowBtn.addEventListener('click', () => {
+      bookingModal.classList.remove('hidden');
+    });
+
+    // Close modal
+    closeModalBtn.addEventListener('click', () => {
+      bookingModal.classList.add('hidden');
+    });
+
+    // Increase ticket count
+    increaseBtn.addEventListener('click', () => {
+      ticketCount++;
+      ticketCountEl.textContent = ticketCount;
+      totalPriceEl.textContent = ticketCount * ticketPrice;
+    });
+
+    // Decrease ticket count
+    decreaseBtn.addEventListener('click', () => {
+      if (ticketCount > 1) {
+        ticketCount--;
+        ticketCountEl.textContent = ticketCount;
+        totalPriceEl.textContent = ticketCount * ticketPrice;
+      }
+    });
+  </script>
+
 <footer class="bg-gray-800 text-white py-10">
     <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
       <!-- Contact Info -->

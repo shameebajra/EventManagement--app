@@ -1,12 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use Illuminate\Contracts\Session\Session;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Vendor\EventController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Vendor\UpdateProfileController;
 use App\Http\Controllers\LandingPage\LandingPageController;
 use App\Http\Controllers\Superadmin\SuperadminEventController;
-use App\Http\Controllers\Vendor\EventController;
-use App\Http\Controllers\Vendor\UpdateProfileController;
-use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,8 +20,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 // Landing page
-Route::get('/', [LandingPageController::class, 'showEvent']);
+Route::get('setlang/{lang}', function($lang) {
+    Session(['lang'=> $lang]);
+    return redirect('/');
+});
+
+Route::controller(LandingPageController::class)->group(function(){
+    Route::get('/','showEvent');
+    Route::get('/event/detail/{id}', 'eventDetail')->name('landingPage.event.detail');
+    // Route::get('/', 'eventSearch')->name('landingpage.event.search');
+});
+
 
 // Register Routes
 Route::prefix('register')->group(function() {
@@ -70,16 +82,16 @@ Route::middleware(['checkVendor'])->group(function() {
             Route::get('/event/search', 'search')->name('event.search');
         });
 
-        // Profile Update Routes
-        Route::controller(controller: UpdateProfileController::class)->group(function() {
-            Route::get('/profile', 'getUser')->name('profile.show');
-            Route::post('/profile/update', 'updateProfile')->name('profile.update');
-        });
+
+        Route::put('/profile/update', [UpdateProfileController::class,'updateProfile'])->name('profile.update');
+        Route::get('/profile', [UpdateProfileController::class, 'getProfile']);
 
         //transaction
         Route::view('/transaction','vendor.transaction');
     });
 });
+
+
 
 
 // Super admin
@@ -92,6 +104,10 @@ Route::middleware(['checkAdmin'])->group(function(){
             Route::get('/dashboard','index');
 
             Route::get('/events/detail/{id}', 'showEventDetail')->name('superadmin.event.detail');
+
+
+            Route::get('/event/search', 'eventSearch')->name('superadmin.event.search');
+
         });
     });
 });

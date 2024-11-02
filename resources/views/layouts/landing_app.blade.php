@@ -5,8 +5,6 @@
     <!-- Header / Navigation Bar -->
     @include('landing_partials.navbar')
 
-    <!-- Hero Section / Banner -->
-    @include('landing_partials.hero_section')
 
                 @yield('content')
 

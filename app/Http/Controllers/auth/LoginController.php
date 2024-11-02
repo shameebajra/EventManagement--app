@@ -19,7 +19,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials )) {
             $user = Auth::user();
             session([
-                'role_id' => $user->role_id, 
+                'role_id' => $user->role_id,
                 'user_id'=>$user->id,
                 'user_name'=>$user->name,
             ]);

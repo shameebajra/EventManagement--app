@@ -8,7 +8,7 @@
         </div>
 
         <div class="block sm:flex items-center md:divide-x md:divide-gray-100">
-            <form class="sm:pr-3 mb-4 sm:mb-0" action="{{ route('event.search') }}" method="GET">
+            <form class="sm:pr-3 mb-4 sm:mb-0" action="{{ route('superadmin.event.search') }}" method="GET">
                 @csrf
                 <label for="products-search" class="sr-only">Search</label>
                 <div class="mt-1 relative sm:w-64 xl:w-96">

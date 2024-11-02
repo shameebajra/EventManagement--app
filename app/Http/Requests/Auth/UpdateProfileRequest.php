@@ -22,7 +22,10 @@ class UpdateProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "logo"=>"required|file|mimes:jpg, png,jpeg,gif|max:10240",
+            "name"=>"required|string",
+            "email" => "required|email|unique:users,email",
+            "phone_number" => "required|numeric|digits:10",
+            "logo"=>"file|mimes:jpg, png,jpeg,gif|max:10240",
             "address"=>"required|string|max:255",
         ];
     }
@@ -30,6 +33,17 @@ class UpdateProfileRequest extends FormRequest
     public function messages()
     {
         return[
+            'name.required' => 'The name is required.',
+            'name.string' => 'The name must be a valid string.',
+
+            'email.required' => 'The email address is required.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.unique' => 'This email address is already in use.',
+
+            'phone_number.required' => 'The phone number is required.',
+            'phone_number.numeric' => 'The phone number must be a valid number.',
+            'phone_number.digits' => 'The phone number must be exactly 10 digits.',
+
             'logo.required' => 'A logo is required.',
             'logo.file' => 'The logo must be a file.',
             'logo.mimes' => 'The logo must be a file of type: jpg, jpeg, png, gif.',

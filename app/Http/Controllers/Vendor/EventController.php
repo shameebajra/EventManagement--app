@@ -290,15 +290,21 @@ class EventController extends Controller
 
 
     public function search(Request $request){
+        try{
         $search = $request->input('search');
         $userId = session('user_id');
 
         $events = Event::where('user_id', $userId)
                     ->when($search, function($query, $search) {
-                        return $query->where('event_name', 'ilike', "%{$search}%");
-                    })->latest('updated_at')->first()->get();
+                        return $query->where('event_name', 'ilike', "%{$search}%")
+                                     ->orWhere('event_type', 'ilike', "%{$search}%");
+                    })->latest('updated_at')->get();
 
         return view('vendor.events', compact('events'))->with('search', $search);
+        }catch(Exception $e){
+
+            return redirect()->back()->with('error', 'Event search failed!');
+        }
 
     }
 

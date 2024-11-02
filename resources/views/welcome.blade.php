@@ -1,6 +1,12 @@
 @extends('layouts.landing_app')
 
 @section('content')
+<!-- Hero Section-->
+<section class="bg-blue-600 text-white text-center py-24">
+    <div class="text-4xl font-bold">{{__('welcome.hero_section')}}</div>
+    <div class="text-2xl mt-4">{{__('welcome.hero_section_subheading')}}</div>
+</section>
+
 
 <!-- Latest Events Section -->
 <section class="py-16 bg-white">
@@ -12,9 +18,13 @@
         <div class="bg-white rounded-lg shadow-lg p-5">
           <img src="{{ asset('/images/eventPoster/' . $event->poster) }}" alt="{{ $event->event_name }}" class="rounded-lg mb-4">
           <div class="text-gray-800 text-xl font-bold">{{ $event->event_name }}</div>
-          <div class="text-gray-600">{{ \Carbon\Carbon::parse($event->date)->format('d M') }}</div>
+          <div class="text-gray-600">{{ Carbon\Carbon::parse($event->date)->format('d M') }}</div>
           <div class="text-pink-500 text-2xl font-bold">Rs. {{ number_format($event->price) }}</div>
-          <button class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full">Book Now</button>
+          <form action="{{ route('landingPage.event.detail', $event->id) }}" method="GET">
+            <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700">
+                Book Now
+            </button>
+        </form>
         </div>
         @endforeach
       </div>
@@ -22,7 +32,7 @@
   </section>
 
 
-  <!-- Featured Events Section -->
+  <!-- All Events Section -->
   <section class="py-16 bg-gray-50">
     <div class="container mx-auto">
       <h2 class="text-3xl font-bold text-center mb-8">All Events</h2>
@@ -34,7 +44,11 @@
           <div class="text-gray-800 text-xl font-bold">{{ $event->event_name }}</div>
           <div class="text-gray-600">{{ \Carbon\Carbon::parse($event->date)->format('d M') }}</div>
           <div class="text-pink-500 text-2xl font-bold">Rs. {{ number_format($event->price) }}</div>
-          <button class="mt-4 bg-pink-500 text-white px-4 py-2 rounded-full">Book Now</button>
+          <form action="{{ route('landingPage.event.detail', $event->id) }}" method="GET">
+            <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700">
+                Book Now
+            </button>
+        </form>
         </div>
         @endforeach
       </div>
@@ -70,7 +84,11 @@
           <div class="text-gray-800 text-xl font-bold">{{ $pick->event_name }}</div>
           <div class="text-gray-600">{{ \Carbon\Carbon::parse($pick->date)->format('d M') }}</div>
           <div class="text-pink-500 text-2xl font-bold">Rs. {{ number_format($pick->price) }}</div>
-          <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded-full">Book Now</button>
+          <form action="{{ route('landingPage.event.detail', $event->id) }}" method="GET">
+            <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700">
+                Book Now
+            </button>
+        </form>
         </div>
         @endforeach
       </div>

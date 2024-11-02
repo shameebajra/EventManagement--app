@@ -1,33 +1,55 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const modal = document.getElementById('add-user-modal');
-    const toggleButtons = document.querySelectorAll('[data-modal-toggle="add-user-modal"]');
-    const closeButtons = document.querySelectorAll('[data-modal-close="add-user-modal"]');
-    const body = document.body;
+    $(document).ready(function() {
+        const modal = document.getElementById('add-user-modal');
+        const body = document.body;
 
-    // Open modal on toggle button click
-    toggleButtons.forEach(button => {
-        button.addEventListener('click', function () {
+        // Open modal on button click
+        $(document).on('click', '.update-btn', function() {
+
+                // alert(user_id);
+
+            $('#add-user-modal').removeClass('hidden');
+            body.classList.add('modal-open');
+
+            // Fetch user data using AJAX
+            $.ajax({
+                type: "GET",
+                url: "/vendor/profile",
+                success: function(response) {
+                  $('#company_name').val(response.user.name);
+                  $('#email').val(response.user.email);
+                  $('#phone_number').val(response.user.phone_number);
+                  $('#address').val(response.user.vendor.address);
+                  $('#logo').val(response.user.vendor.logo);
+
+
+                }
+            });
+        });
+
+        // Toggle buttons for opening modal
+        $('[data-modal-toggle="add-user-modal"]').on('click', function() {
             modal.classList.toggle('hidden');
             body.classList.toggle('modal-open');
         });
-    });
 
-    // Close modal on close button click
-    closeButtons.forEach(button => {
-        button.addEventListener('click', function () {
+        // Close buttons for closing modal
+        $('[data-modal-close="add-user-modal"]').on('click', function() {
             modal.classList.add('hidden');
             body.classList.remove('modal-open');
         });
-    });
 
-    // Optional: Close the modal when clicking outside the modal content
-    window.addEventListener('click', function (event) {
-        if (event.target === modal) {
-            modal.classList.add('hidden');
-            body.classList.remove('modal-open');
-        }
+        // Optional: Close the modal when clicking outside the modal content
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.classList.add('hidden');
+                body.classList.remove('modal-open');
+            }
+        });
     });
+</script>
+<script>
 
     // Clear and add ticket types when editing a form
     function resetTicketTypes() {
@@ -142,4 +164,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+
+
+
 </script>
+

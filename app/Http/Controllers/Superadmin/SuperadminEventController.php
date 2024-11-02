@@ -115,4 +115,17 @@ class SuperadminEventController extends Controller
         }
 
     }
+
+    public function eventSearch(Request $request){
+        try {
+        $search = $request->input('search');
+
+        $events= Event::where('event_name', 'ilike', "%{$search}%")
+        ->orWhere('event_type', 'ilike', "%{$search}%")->latest('updated_at')->get();
+
+        return view('superadmin.events', compact('events'))->with('search', $search);
+        }catch (Exception $e){
+            return redirect()->back()->with('error', 'Event search failed!');
+        }
+    }
 }
