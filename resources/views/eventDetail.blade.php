@@ -29,7 +29,7 @@
         <div class="mt-6 flex items-center justify-between">
           <span class="text-2xl">Rs. 1500</span>
           {{-- <a href="{{ route('events.edit', $event->id) }}" class="bg-red-500 text-white py-2 px-6 rounded-lg shadow-md hover:bg-red-700"> --}}
-            <button id="bookNowBtn" class="bg-red-500 text-white py-2 px-6 rounded-lg shadow-md">Book Now</button>
+            <button id="bookNowBtn" value="{{$event->id}}" class="bg-red-500 text-white py-2 px-6 rounded-lg shadow-md bookbtn">Book Now</button>
         </div>
       </div>
     </div>
@@ -71,7 +71,7 @@
                                                                                                                                                                                 --}}
 
 
-
+@auth
     <!-- Booking Modal (hidden by default) -->
     <div id="bookingModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
@@ -84,33 +84,38 @@
 
           <!-- Event Date and Time -->
           <div class="flex items-center justify-between bg-blue-500 text-white py-2 px-4 rounded-lg mb-4">
-            <div class="font-bold">Nov09</div>
-            <div>Saturday 7:00 PM–11:59 PM</div>
+            <div id="eventDate"class="font-bold"></div>
+            <div id="eventTime"></div>
           </div>
 
+           <!-- Booking Form -->
+        <form action="{{ route('event.book') }}" method="POST">
+            @csrf
+
+          {{-- <input type="hidden" id="event_id" name="event_id" > --}}
           <!-- Ticket Type -->
           <div class="mb-4">
-            <label for="ticketType" class="block text-gray-700 font-bold mb-2">Select Ticket Type</label>
-            <div class="flex items-center justify-between bg-yellow-300 py-2 px-4 rounded-lg">
-              <span>PHASE I<br>Rs. 500</span>
-              <div class="flex items-center space-x-2">
+            <label for="ticketTypeSelect" class="block text-gray-700 font-bold mb-2">Select Ticket Type</label>
+            <select id="ticketTypeSelect" class="bg-yellow-300 py-2 px-4 rounded-lg w-full mb-2">
+                <!-- Options will be dynamically populated -->
+            </select>
+            <div class="flex items-center space-x-2">
                 <button id="decrease" class="bg-gray-300 text-gray-700 py-1 px-2 rounded">-</button>
                 <span id="ticketCount">1</span>
                 <button id="increase" class="bg-gray-300 text-gray-700 py-1 px-2 rounded">+</button>
-              </div>
-              <button class="bg-blue-500 text-white py-1 px-2 rounded">✔</button>
             </div>
-            <p class="mt-2 text-gray-600">Total price Rs. <span id="totalPrice">500</span></p>
-          </div>
+            <p class="mt-2 text-gray-600">Total price Rs. <span id="totalPrice">0</span></p>
+        </div>
+
 
           <!-- User Details -->
           <div class="mb-4">
-            <input type="text" class="w-full border border-gray-300 rounded py-2 px-3 mb-2" placeholder="Name">
-            <input type="email" class="w-full border border-gray-300 rounded py-2 px-3 mb-2" placeholder="Email address">
+            <input type="text" class="w-full border border-gray-300 rounded py-2 px-3 mb-2" placeholder="Name" name="userName" id="userName">
+            <input type="email" class="w-full border border-gray-300 rounded py-2 px-3 mb-2" placeholder="Email address" id="userEmail">
           </div>
 
           <!-- Country and Phone Number -->
-          <!-- <div class="mb-4 flex items-center space-x-2">
+          <div class="mb-4 flex items-center space-x-2">
             <div class="w-full">
               <label for="country" class="block text-gray-700 font-bold mb-1">Country</label>
               <div class="flex items-center space-x-2">
@@ -121,24 +126,24 @@
             <div class="w-full">
               <label for="phone" class="block text-gray-700 font-bold mb-1">Phone Number</label>
               <div class="flex">
-                <input type="text" class="border border-gray-50 rounded-l" value="+977" disabled>
-                <input type="text" class="border border-gray-300 rounded-r py-2 px-3" placeholder="Enter phone number">
+                <input type="text" class="border border-gray-300 rounded-r py-2 px-3" placeholder="Enter phone number" id="userPhoneNumber">
               </div>
             </div>
-          </div> -->
-
-          <!-- Recaptcha Notice -->
-          <p class="text-sm text-gray-600 mb-4">
-            This site is protected by reCAPTCHA and the Google
-            <a href="#" class="text-blue-500">Privacy Policy</a> and
-            <a href="#" class="text-blue-500">Terms of Service</a> apply.
-          </p>
-
-          <!-- Action Buttons -->
+          </div>
+        </form>
+         <!-- Action Buttons -->
           <div class="flex justify-between">
             <button id="cancelBtn" class="bg-gray-300 text-gray-700 py-2 px-4 rounded-md">Cancel</button>
-            <button class="bg-blue-500 text-white py-2 px-4 rounded-md">Go to payment</button>
+            <button type="button" id="bookBtn" class="bg-blue-500 text-white py-2 px-4 rounded-md">Book</button>
           </div>
         </div>
       </div>
+@endauth
+@guest
+<script>
+    window.location.href = "{{ route('login.form') }}";
+</script>
+@endguest
+
+
 @endsection

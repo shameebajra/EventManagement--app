@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserDataRequest extends FormRequest
+class PurchasedTicketRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,6 +25,9 @@ class UserDataRequest extends FormRequest
             "name"=>"required|string",
             "email" => "required|email|unique:users,email",
             "phone_number" => "required|numeric|digits:10",
+
+            
+
         ];
     }
 }

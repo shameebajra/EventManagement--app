@@ -18,4 +18,8 @@ class TicketType extends Model
 
     protected $hidden=[
     ];
+
+    public function event(){
+        return $this->belongsTo(Event::class);
+    }
 }

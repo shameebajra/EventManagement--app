@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\User\UserTicketController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Session\Session;
 use App\Http\Controllers\Auth\LoginController;
@@ -56,6 +57,15 @@ Route::controller(LoginController::class)->group(function() {
     Route::get('/logout', 'logout')->name('logout');
     Route::post('/logout', 'logout')->name('logout');
 
+});
+
+
+// User Routes
+Route::middleware(['checkUser'])->group(function(){
+    Route::controller(UserTicketController::class)->group(function() {
+        Route::get('event/{id}','eventDetail');
+        Route::post('/event/book','bookEvent')->name('event.book');
+    });
 });
 
 

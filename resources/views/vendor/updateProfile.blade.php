@@ -20,19 +20,20 @@
 
             <!-- Modal Body -->
             <div class="p-6 space-y-6">
-                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ url('vendor/profile/update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
                     <div class="grid grid-cols-6 gap-6">
                         <div class="col-span-6 sm:col-span-3">
+                            <label for="email" class="text-sm font-medium text-gray-900 block mb-2">Email</label>
+                            <input disabled type="email" name="email" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" >
+                        </div>
+                        <div class="col-span-6 sm:col-span-3">
                             <label for="company-name" class="text-sm font-medium text-gray-900 block mb-2">Company Name</label>
                             <input type="text" name="company_name" id="company_name" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" >
                         </div>
-                        <div class="col-span-6 sm:col-span-3">
-                            <label for="email" class="text-sm font-medium text-gray-900 block mb-2">Email</label>
-                            <input type="email" name="email" id="email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" >
-                        </div>
+
                         <div class="col-span-6 sm:col-span-3">
                             <label for="phone-number" class="text-sm font-medium text-gray-900 block mb-2">Phone Number</label>
                             <input type="text" name="phone_number" id="phone_number" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"  >

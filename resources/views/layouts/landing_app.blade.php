@@ -10,6 +10,6 @@
 
     <!-- Foter Bar -->
      @include('landing_partials.footer')
-
+     @include('landing_partials.script')
 </body>
 </html>

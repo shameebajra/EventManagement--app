@@ -17,25 +17,7 @@ use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
-    {
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(EventRequest $request)
     {
         try {
@@ -178,7 +160,7 @@ class EventController extends Controller
                 $posterName = time() . '.' . $extension;
                 $poster->move(public_path('/images/eventPoster'), $posterName);
 
-                // If a new poster is uploaded, delete the old one (optional)
+                // If a new poster is uploaded
                 if ($event->poster && $event->poster !== "0.png") {
                     $oldPosterPath = public_path('/images/eventPoster/' . $event->poster);
                     if (file_exists($oldPosterPath)) {
@@ -186,7 +168,6 @@ class EventController extends Controller
                     }
                 }
             } else {
-                // Keep the old poster if no new poster is uploaded
                 $posterName = $event->poster;
             }
 
@@ -204,15 +185,13 @@ class EventController extends Controller
                 'poster'        => $posterName,
             ]);
 
-            // Update ticket types
             $existingTicketIds = [];
 
             // Loop through ticket types to update or create
             foreach ($request->ticket_types as $ticket) {
                 if (isset($ticket['id'])) {
-                    // Existing ticket, update it
                     $ticketType = TicketType::where('id', $ticket['id'])
-                        ->where('event_id', $event->id) // Ensure it belongs to the correct event
+                        ->where('event_id', $event->id) \
                         ->first();
 
                     if ($ticketType) {
@@ -223,10 +202,9 @@ class EventController extends Controller
                         ]);
                     }
 
-                    // Add the updated ticket ID to the existing array
                     $existingTicketIds[] = $ticket['id'];
                 } else {
-                    // Create a new ticket if it doesn't already exist
+                    // Create a new ticket
                     $newTicketType = TicketType::create([
                         'event_id'    => $event->id,
                         'ticket_type' => $ticket['ticket_type'],
@@ -234,12 +212,10 @@ class EventController extends Controller
                         'price'       => $ticket['price'],
                     ]);
 
-                    // Keep track of the newly created ticket ID
                     $existingTicketIds[] = $newTicketType->id;
                 }
             }
 
-            // Delete any ticket types that were not included in the request
             TicketType::where('event_id', $event->id)
                 ->whereNotIn('id', $existingTicketIds)
                 ->delete();

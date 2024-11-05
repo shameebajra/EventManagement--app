@@ -23,7 +23,6 @@ class UpdateProfileRequest extends FormRequest
     {
         return [
             "name"=>"required|string",
-            "email" => "required|email|unique:users,email",
             "phone_number" => "required|numeric|digits:10",
             "logo"=>"file|mimes:jpg, png,jpeg,gif|max:10240",
             "address"=>"required|string|max:255",
@@ -35,10 +34,6 @@ class UpdateProfileRequest extends FormRequest
         return[
             'name.required' => 'The name is required.',
             'name.string' => 'The name must be a valid string.',
-
-            'email.required' => 'The email address is required.',
-            'email.email' => 'Please enter a valid email address.',
-            'email.unique' => 'This email address is already in use.',
 
             'phone_number.required' => 'The phone number is required.',
             'phone_number.numeric' => 'The phone number must be a valid number.',

@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('phone_number');
+            $table->integer('quantity');
             $table->decimal('total', 10, 2);
             $table->timestamps();
         });

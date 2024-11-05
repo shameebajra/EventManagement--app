@@ -11,8 +11,19 @@ class PurchasedTicket extends Model
         'name',
         'email',
         'phone_number',
+        'quantity',
         'total',
         'user_id',
         'ticket_id',
+        'ticket',
     ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function ticketTypes(){
+        return $this->belongsTo(TicketType::class);
+    }
+
 }

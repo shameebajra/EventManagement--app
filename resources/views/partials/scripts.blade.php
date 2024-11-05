@@ -22,8 +22,6 @@
                   $('#phone_number').val(response.user.phone_number);
                   $('#address').val(response.user.vendor.address);
                   $('#logo').val(response.user.vendor.logo);
-
-
                 }
             });
         });
@@ -49,6 +47,9 @@
         });
     });
 </script>
+
+
+
 <script>
 
     // Clear and add ticket types when editing a form

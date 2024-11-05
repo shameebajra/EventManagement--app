@@ -14,11 +14,13 @@
             </form> --}}
         <nav>
             <ul class="flex space-x-6">
-                <li><a href="#" class="text-gray-700 hover:text-blue-500">Home</a></li>
-                <li><a href="#" class="text-gray-700 hover:text-blue-500">Events</a></li>
+                @auth
+                <li><a href="#" class="text-gray-700 hover:text-blue-500">My Tickets</a></li>
+                @endauth
+                {{-- <li><a href="#" class="text-gray-700 hover:text-blue-500">Events</a></li>
                 <li><a href="#" class="text-gray-700 hover:text-blue-500">Voting</a></li>
                 <li><a href="#" class="text-gray-700 hover:text-blue-500">Contact Us</a></li>
-                <li><a href="#" class="text-gray-700 hover:text-blue-500">About Us</a></li>
+                <li><a href="#" class="text-gray-700 hover:text-blue-500">About Us</a></li> --}}
 
                 <li class="flex items-center space-x-2">
                     <a href="{{url("/setlang/np")}}" class="text-gray-700 hover:text-blue-500">
@@ -35,8 +37,16 @@
             </ul>
         </nav>
         <div class="flex items-center space-x-4">
+            @guest
             <a href="{{ url('register/vendor') }}"class="bg-pink-500 text-white px-4 py-2 rounded-full inline-block">Create Event</a>
             <a href="{{ url('login') }}" class="bg-pink-500 text-white px-4 py-2 rounded-full inline-block">Log In</a>
+            @endguest
+
+            @auth
+            <a href="#" class="text-gray-700 hover:text-blue-500 font-bold">Hello, {{Session('user_name')}}</a>
+                <a href="{{ route('logout') }}" class="bg-pink-500 text-white px-4 py-2 rounded-full inline-block">Log out</a>
+            @endauth
+
         </div>
     </div>
 </header>
