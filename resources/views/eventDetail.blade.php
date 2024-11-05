@@ -90,7 +90,7 @@
 
            <!-- Booking Form -->
         <form action="{{ route('event.book') }}" method="POST">
-            @csrf
+        @csrf
 
           {{-- <input type="hidden" id="event_id" name="event_id" > --}}
           <!-- Ticket Type -->

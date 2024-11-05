@@ -50,6 +50,7 @@ class UserTicketController extends Controller
 
             return response()->json(['message' => 'Ticket purchase successful!'], 200);
         } catch (Exception $e) {
+           dd($e);
             Log::error(message: 'Ticket purchase error: ' . $e->getMessage());
             return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
         }

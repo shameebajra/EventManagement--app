@@ -117,11 +117,12 @@
                 ticket_id: $('#ticketTypeSelect').find(':selected').data('ticket-id'),
                 quantity: quantity,
                 total: totalPrice, 
-                userName: $('#userName').val(), /
+                userName: $('#userName').val(), 
                 userEmail: $('#userEmail').val(), 
                 userPhoneNumber: $('#userPhoneNumber').val(), 
             };
 
+            // AJAX request to submit the form
             $.ajax({
                 type: "POST",
                 url: "{{ route('event.book') }}", 
@@ -137,9 +138,10 @@
                         $.each(errors, function(key, value) {
                             errorMsg += value[0] + '\n';
                         });
-                        alert('There were errors:\n' + errorMsg);
+                        alert('There were errors:\n' + errorMsg); 
                     } else {
-                        alert('There was an error with your booking. Please try again.'); /
+                        alert('There was an error with your booking. Please try again.'); 
+                    }
                 }
             });
         });
