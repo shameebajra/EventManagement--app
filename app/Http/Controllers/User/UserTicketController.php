@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\PurchasedTicket;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Models\TicketType;
 use Illuminate\Contracts\Session\Session;
 
 class UserTicketController extends Controller
@@ -50,8 +51,17 @@ class UserTicketController extends Controller
 
             return response()->json(['message' => 'Ticket purchase successful!'], 200);
         } catch (Exception $e) {
-           dd($e);
             Log::error(message: 'Ticket purchase error: ' . $e->getMessage());
+            return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
+        }
+    }
+
+
+    public function myTicket(){
+        try{
+            $purchasedTicket = PurchasedTicket::with('TicketType')->get();
+        }catch (Exception $e) {
+            Log::error(message: 'Purchase ticket error: ' . $e->getMessage());
             return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
         }
     }
