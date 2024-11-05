@@ -1,4 +1,5 @@
 @include('landing_partials.header')
+{{-- @include('landing_partials.style') --}}
 
 <body class="font-sans">
 

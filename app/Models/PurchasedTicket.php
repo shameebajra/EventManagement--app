@@ -23,7 +23,11 @@ class PurchasedTicket extends Model
     }
 
     public function ticketTypes(){
-        return $this->belongsTo(TicketType::class);
+        return $this->belongsTo(TicketType::class,'ticket_id', 'id' );
+    }
+
+    public function event(){
+        return $this->hasOneThrough(Event::class, TicketType::class,'event_id','id');
     }
 
 }

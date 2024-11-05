@@ -59,7 +59,12 @@ class UserTicketController extends Controller
 
     public function myTicket(){
         try{
-            $purchasedTicket = PurchasedTicket::with('TicketType')->get();
+            $purchasedTickets = PurchasedTicket::with(['ticketTypes','ticketTypes.event'])
+            ->where('user_id', Session('user_id'))
+            ->get();
+            // dd($purchasedTickets->all());
+            
+            return view('user.myPurchasedTicket', compact('purchasedTickets'));
         }catch (Exception $e) {
             Log::error(message: 'Purchase ticket error: ' . $e->getMessage());
             return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);

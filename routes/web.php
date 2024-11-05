@@ -63,8 +63,10 @@ Route::controller(LoginController::class)->group(function() {
 // User Routes
 Route::middleware(['checkUser'])->group(function(){
     Route::controller(UserTicketController::class)->group(function() {
-        Route::get('event/{id}','eventDetail');
+        Route::get('/event/{id}','eventDetail');
         Route::post('/event/book','bookEvent')->name('event.book');
+
+        Route::get('/user/purchased-ticket','myTicket')->name('myTicket');
     });
 });
 
