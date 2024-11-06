@@ -13,9 +13,9 @@ class LandingPageController extends Controller
     public function showEvent()
     {
         try{
-            $events = Event::latest('updated_at')
-                        // ->where('event_status','active')
-                        ->get();
+            $events = Event::with('ticketTypes')
+                            ->latest('updated_at')
+                            ->get();
 
             $latestDate = Event::max('date');
             $latestEvents = Event::where('date', $latestDate)
