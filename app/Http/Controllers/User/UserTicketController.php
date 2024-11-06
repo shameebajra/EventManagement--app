@@ -42,7 +42,7 @@ class UserTicketController extends Controller
     public function bookEvent(Request $request)
     {
         try {
-            $purchasedTicket= PurchasedTicket::with('ticketTypes.event')->create([
+            $purchasedTicket= PurchasedTicket::with(['ticketTypes','ticketTypes.event'])->create([
                 'user_id' => Session('user_id'),
                 'ticket_id' => $request->ticket_id,
                 'name' => $request->userName,
@@ -52,6 +52,13 @@ class UserTicketController extends Controller
                 'total' => $request->total,
             ]);
             Log::info('Purchased Ticket Created Successfully', ['purchasedTicket' => $purchasedTicket]);
+
+            //decrease quantity in ticketTypes on ticket purchase
+            $ticket = $purchasedTicket->ticketTypes;
+            $ticket->quantity = $ticket->quantity - $request->quantity;
+            $ticket->save();
+
+            Log::info('Quantity Decrease error', ['event' => $ticket]);
 
             //  Attempt to send the email
             Mail::to($request->userEmail)->send(new TicketPurchaseEmail($purchasedTicket));

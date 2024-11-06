@@ -14,7 +14,7 @@ class LandingPageController extends Controller
     {
         try{
             $events = Event::latest('updated_at')
-                        ->where('event_status','active')
+                        // ->where('event_status','active')
                         ->get();
 
             $latestDate = Event::max('date');
