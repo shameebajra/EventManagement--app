@@ -8,30 +8,51 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Transaction
+                                Ticket ID
                             </th>
                             <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Date & Time
+                              Ticket Type
                             </th>
                             <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Amount
+                                Name
+                            </th>
+                            <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Email
+                            </th><th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Phone Number
+                            </th><th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Quantity
+                            </th>
+                            <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Total
                             </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white">
-                        {{-- @foreach ($transactions as $transaction) --}}
+                        @foreach ($transactions as $transaction)
                             <tr>
                                 <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                   <span class="font-semibold"> </span>
+                                   <span class="font-semibold">{{$transaction->id}} </span>
                                 </td>
                                 <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-
+                                    {{$transaction->ticketTypes->event->event_name}}
+                                </td>
+                                <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
+                                    {{$transaction->name}}
                                 </td>
                                 <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-
+                                    {{$transaction->email}}
+                                </td>
+                                <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                                    {{$transaction->phone_number}}
+                                </td>  <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                                    {{$transaction->quantity}}
+                                </td>
+                                <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                                    {{$transaction->total}}
                                 </td>
                             </tr>
-                        {{-- @endforeach --}}
+                        @endforeach
                     </tbody>
                 </table>
             </div>

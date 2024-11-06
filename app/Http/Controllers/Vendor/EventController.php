@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Vendor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Vendor\EventRequest;
 use App\Models\Event;
+use App\Models\PurchasedTicket;
 use App\Models\TicketType;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
-    
+
     public function store(EventRequest $request)
     {
         try {
@@ -284,10 +285,57 @@ class EventController extends Controller
 
         return view('vendor.events', compact('events'))->with('search', $search);
         }catch(Exception $e){
-
             return redirect()->back()->with('error', 'Event search failed!');
         }
 
     }
 
+    public function showSoldTickets($id){
+        try{
+            $showSoldTickets = PurchasedTicket::with(['ticketTypes', 'ticketTypes.event'])
+                                ->whereHas('ticketTypes.event', function($query) use ($id) {
+                                    $query->where('id', $id);
+                                })
+                                ->get();
+
+            $totalSoldTickets = PurchasedTicket::with(['ticketTypes', 'ticketTypes.event'])
+                                ->whereHas('ticketTypes.event', function($query) use ($id) {
+                                    $query->where('id', $id);
+                                })
+                                ->sum('quantity');
+
+            // $eventTickets = TicketType::where('id', $id)->sum('quantity');
+            // $remainingTickets = $totalSoldTickets-$eventTickets;
+
+            $totalEarned = PurchasedTicket::with(['ticketTypes', 'ticketTypes.event'])
+                            ->whereHas('ticketTypes.event', function($query) use ($id) {
+                                $query->where('id', $id);
+                            })
+                            ->sum('total');
+
+
+            return view('vendor.soldTickets', compact('showSoldTickets','totalSoldTickets','totalEarned'));
+
+
+
+        }catch (Exception $e) {
+            Log::error(message: 'Sold tickets error: ' . $e->getMessage());
+            return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
+        }
     }
+
+    public function allTransaction(){
+        try{
+        $transactions = PurchasedTicket::with(['ticketTypes.event'])
+                            ->whereHas('ticketTypes.event',function($query){
+                                $query->where('user_id', Session('user_id'));
+                            })->get();
+
+        return view('vendor.transaction', compact('transactions'));
+        }catch (Exception $e) {
+            Log::error(message: 'Transacions error: ' . $e->getMessage());
+            return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
+        }
+    }
+}
+

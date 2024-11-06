@@ -37,16 +37,16 @@ class UserTicketController extends Controller
 
 
     public function bookEvent(Request $request)
-    {        
+    {
         try {
             PurchasedTicket::create([
                 'user_id' => Session('user_id'),
-                'ticket_id' => $request->ticket_id, 
-                'name' => $request->userName, 
-                'email' => $request->userEmail, 
+                'ticket_id' => $request->ticket_id,
+                'name' => $request->userName,
+                'email' => $request->userEmail,
                 'phone_number' => $request->userPhoneNumber,
                 'quantity' => $request->quantity,
-                'total' => $request->total, 
+                'total' => $request->total,
             ]);
 
             return response()->json(['message' => 'Ticket purchase successful!'], 200);
@@ -61,9 +61,10 @@ class UserTicketController extends Controller
         try{
             $purchasedTickets = PurchasedTicket::with(['ticketTypes','ticketTypes.event'])
             ->where('user_id', Session('user_id'))
+            ->latest()
             ->get();
             // dd($purchasedTickets->all());
-            
+
             return view('user.myPurchasedTicket', compact('purchasedTickets'));
         }catch (Exception $e) {
             Log::error(message: 'Purchase ticket error: ' . $e->getMessage());

@@ -42,6 +42,10 @@
                 <a href="{{ route('event.detail', $event->id) }}" class="bg-cyan-600 text-white rounded-lg px-4 py-2 text-sm hover:bg-cyan-700">
                     Detail
                 </a>
+                <a href="{{ route('event.sold.tickets', $event->id) }}" class="bg-cyan-600 text-white rounded-lg px-4 py-2 text-sm hover:bg-cyan-700">
+                    Sold Tickets
+                </a>
+
 
                 <!-- Edit Button -->
                 <a href="{{ route('events.edit', $event->id) }}" class="bg-cyan-600 text-white rounded-lg px-4 py-2 text-sm hover:bg-cyan-700">

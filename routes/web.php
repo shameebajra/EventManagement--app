@@ -81,13 +81,20 @@ Route::middleware(['checkVendor'])->group(function() {
         Route::view('/dashboard', 'vendor.dashboard');
 
         Route::controller(EventController::class)->group(function() {
-            Route::post('/add/events', 'store')->name('add.event');
+            Route::post('/add/event', 'store')->name('add.event');
             Route::get('/events', 'show')->name('vendor.events');
-            Route::get('/events/edit/{id}', 'edit')->name('events.edit');
-            Route::put('/events/edit/{id}', 'update')->name('events.update');
-            Route::delete('/events/delete/{id}', 'destroy')->name('events.delete');
 
-            Route::get('/events/detail/{id}', 'showEventDetail')->name('event.detail');
+            Route::get('/event/edit/{id}', 'edit')->name('events.edit');
+            Route::put('/event/edit/{id}', 'update')->name('events.update');
+
+            Route::delete('/event/delete/{id}', 'destroy')->name('events.delete');
+
+            Route::get('/event/detail/{id}', 'showEventDetail')->name('event.detail');
+
+            Route::get('/event/sold-tickets/{id}', 'showSoldTickets')->name('event.sold.tickets');
+
+            Route::get('/transaction','allTransaction')->name('event.transaction');
+
 
 
             //search
@@ -99,7 +106,6 @@ Route::middleware(['checkVendor'])->group(function() {
         Route::get('/profile', [UpdateProfileController::class, 'getProfile']);
 
         //transaction
-        Route::view('/transaction','vendor.transaction');
     });
 });
 
