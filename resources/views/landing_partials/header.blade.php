@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  
+
   <title>Events NP</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -13,7 +13,7 @@
   <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
 
-         
+
 
   <style>
     .event-card {
@@ -34,7 +34,7 @@
         height: 100vh;
         display: grid;
         font-family: "Staatliches", cursive;
-        background: hsl(342, 47%, 77%);
+        /* background: hsl(342, 47%, 77%); */
         color: black;
         font-size: 14px;
         letter-spacing: 0.1em;
@@ -52,7 +52,7 @@
         box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
     }
 
-   
+
 
     .left {
         display: flex;
@@ -213,6 +213,6 @@
     }
 
 
-      
+
   </style>
 </head>

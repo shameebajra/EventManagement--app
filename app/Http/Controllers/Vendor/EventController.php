@@ -326,12 +326,29 @@ class EventController extends Controller
 
     public function allTransaction(){
         try{
+            $transactions = $this->transaction();
+
+             return view('vendor.transaction', compact('transactions'));
+        }catch (Exception $e) {
+            Log::error(message: 'Transacions error: ' . $e->getMessage());
+            return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
+        }
+    }
+
+    public function transaction(){
         $transactions = PurchasedTicket::with(['ticketTypes.event'])
                             ->whereHas('ticketTypes.event',function($query){
                                 $query->where('user_id', Session('user_id'));
-                            })->get();
+                            })->latest()->get();
 
-        return view('vendor.transaction', compact('transactions'));
+         return $transactions;
+    }
+
+    public function dashboard(){
+        try{
+            $transactions = $this->transaction();
+
+             return view('vendor.dashboard', compact('transactions'));
         }catch (Exception $e) {
             Log::error(message: 'Transacions error: ' . $e->getMessage());
             return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);

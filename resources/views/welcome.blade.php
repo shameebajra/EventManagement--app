@@ -18,15 +18,27 @@
         @foreach($latestEvents as $event)
         <!-- Event Card -->
         <div class="bg-white rounded-lg shadow-lg p-5">
-          <img src="{{ asset('/images/eventPoster/' . $event->poster) }}" alt="{{ $event->event_name }}" class="rounded-lg mb-4">
+            <img src="{{ asset('/images/eventPoster/' . $event->poster) }}" alt="{{ $event->event_name }}"  class="rounded-lg mb-4" style="width: 350px; height: 300px;">
           <div class="text-gray-800 text-xl font-bold">{{ $event->event_name }}</div>
           <div class="text-gray-600">{{ Carbon\Carbon::parse($event->date)->format('d M') }}</div>
-          <div class="text-pink-500 text-2xl font-bold">Rs. {{ number_format($event->price) }}</div>
-          <form action="{{ route('landingPage.event.detail', $event->id) }}" method="GET">
-            <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700">
-                Book Now
-            </button>
-        </form>
+          {{-- <div class="text-pink-500 text-2xl font-bold">Rs. {{ number_format($event->price) }}</div> --}}
+
+
+            @if ($event->event_status === 'active')
+                <form action="{{ route('landingPage.event.detail', $event->id) }}" method="GET">
+                    <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700">
+                        Book Now
+                    </button>
+                </form>
+            @elseif($event->event_status === 'postponed')
+                <div class="mt-4 text-red-500 font-bold">
+                    Postponed
+                </div>
+                @elseif($event->event_status === 'cancelled')
+                <div class="mt-4 text-red-500 font-bold">
+                    Cancelled
+                </div>
+            @endif
         </div>
         @endforeach
       </div>
@@ -42,15 +54,26 @@
         @foreach($events as $event)
         <!-- Event Card -->
         <div class="event-card bg-white rounded-lg shadow-lg p-5">
-          <img src="{{ asset('/images/eventPoster/' . $event->poster) }}" alt="{{ $event->event_name }}" class="rounded-lg mb-4">
+            <img src="{{ asset('/images/eventPoster/' . $event->poster) }}" alt="{{ $event->event_name }}"  class="rounded-lg mb-4" style="width: 350px; height: 300px;">
+
           <div class="text-gray-800 text-xl font-bold">{{ $event->event_name }}</div>
           <div class="text-gray-600">{{ \Carbon\Carbon::parse($event->date)->format('d M') }}</div>
-          <div class="text-pink-500 text-2xl font-bold">Rs. {{ number_format($event->price) }}</div>
+          {{-- <div class="text-pink-500 text-2xl font-bold">Rs. {{ number_format($event->price) }}</div> --}}
+          @if ($event->event_status === 'active')
           <form action="{{ route('landingPage.event.detail', $event->id) }}" method="GET">
-            <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700">
-                Book Now
-            </button>
-        </form>
+              <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700">
+                  Book Now
+              </button>
+          </form>
+           @elseif($event->event_status === 'postponed')
+          <div class="mt-4 text-red-500 font-bold  ">
+              Postponed
+          </div>
+          @elseif($event->event_status === 'cancelled')
+          <div class="mt-4 text-red-500 font-bold">
+              Cancelled
+          </div>
+         @endif
         </div>
         @endforeach
       </div>

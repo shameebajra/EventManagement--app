@@ -6,20 +6,26 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LandingPageController extends Controller
 {
     public function showEvent()
     {
         try{
-            $events = Event::latest('updated_at')->get();
+            $events = Event::latest('updated_at')
+                        ->where('event_status','active')
+                        ->get();
 
             $latestDate = Event::max('date');
-            $latestEvents = Event::where('date', $latestDate)->take(6)->get();
+            $latestEvents = Event::where('date', $latestDate)
+                            ->where('event_status','active')
+                            ->take(6)->get();
 
             return view('welcome',compact("events","latestEvents"));
         }catch (Exception $e)
         {
+            Log::error(message: 'Event display unsuccessful!: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Event display unsuccessful!');
 
         }
@@ -36,6 +42,7 @@ class LandingPageController extends Controller
 
         }catch (Exception $e)
         {
+            Log::error(message: 'Event display unsuccessful!: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Event display unsuccessful!');
 
         }

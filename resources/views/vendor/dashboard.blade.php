@@ -21,15 +21,15 @@
             </div>
             <div id="main-chart"></div>
         </div>
-        
+
         <div class="bg-white shadow rounded-lg mb-4 p-4 sm:p-6">
             <div class="mb-4 flex items-center justify-between">
                 <div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Latest Transactions</h3>
-                    <span class="text-base font-normal text-gray-500">This is a list of latest transactions</span>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Latest Ticket Transactions</h3>
+                    <span class="text-base font-normal text-gray-500">This is a list of latest ticket transactions</span>
                 </div>
                 <div class="flex-shrink-0">
-                    <a href="#" class="text-sm font-medium text-cyan-600 hover:bg-gray-100 rounded-lg p-2">View all</a>
+                    <a href="{{route('event.transaction')}}" class="text-sm font-medium text-cyan-600 hover:bg-gray-100 rounded-lg p-2">View all</a>
                 </div>
             </div>
 
@@ -41,30 +41,31 @@
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Transaction
+                                            Event
                                         </th>
                                         <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Date & Time
+                                            Quantity
                                         </th>
                                         <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Amount
+                                            Total
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white">
-                                    {{-- @foreach($transactions as $transaction)
-                                    <tr class="{{ $loop->even ? 'bg-gray-50' : '' }}">
+                                    @for ($i = 0; $i < min(5, count($transactions)); $i++)
+                                    <tr class="{{ $i % 2 == 1 ? 'bg-gray-50' : '' }}">
                                         <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                            {{ $transaction->description }}
+                                            {{ $transactions[$i]->ticketTypes->event->event_name }}
                                         </td>
                                         <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                            {{ $transaction->created_at->format('M d, Y') }}
+                                            {{ $transactions[$i]->quantity }}
                                         </td>
                                         <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                            ${{ number_format($transaction->amount, 2) }}
+                                            Rs. {{ number_format($transactions[$i]->total) }}
                                         </td>
                                     </tr>
-                                    @endforeach --}}
+                                @endfor
+
                                 </tbody>
                             </table>
                         </div>
@@ -148,44 +149,7 @@
             </ul>
         </div>
 
-        <div class="bg-white shadow rounded-lg mb-4 p-4 sm:p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-xl font-bold leading-none text-gray-900">Acquisition Overview</h3>
-            </div>
-            <div class="mt-2">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-sm font-medium text-gray-900">Organic Search</span>
-                    <span class="text-sm font-medium text-gray-500">data here</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
-                    <div class="bg-green-600 h-2 rounded-full" style="width: data here%;"></div>
-                </div>
 
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-sm font-medium text-gray-900">Referral</span>
-                    <span class="text-sm font-medium text-gray-500"></span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
-                    <div class="bg-blue-600 h-2 rounded-full" style="width: %;"></div>
-                </div>
-
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-sm font-medium text-gray-900">Direct</span>
-                    <span class="text-sm font-medium text-gray-500"></span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
-                    <div class="bg-yellow-600 h-2 rounded-full" style="width: %;"></div>
-                </div>
-
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-sm font-medium text-gray-900">Social</span>
-                    <span class="text-sm font-medium text-gray-500"></span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
-                    <div class="bg-red-600 h-2 rounded-full" style="width: %;"></div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 @endsection

@@ -9,8 +9,11 @@ use Illuminate\Http\Request;
 use App\Models\PurchasedTicket;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Mail\TicketPurchaseEmail;
+
 use App\Models\TicketType;
 use Illuminate\Contracts\Session\Session;
+use Illuminate\Support\Facades\Mail;
 
 class UserTicketController extends Controller
 {
@@ -39,7 +42,7 @@ class UserTicketController extends Controller
     public function bookEvent(Request $request)
     {
         try {
-            PurchasedTicket::create([
+            $purchasedTicket= PurchasedTicket::with('ticketTypes.event')->create([
                 'user_id' => Session('user_id'),
                 'ticket_id' => $request->ticket_id,
                 'name' => $request->userName,
@@ -48,6 +51,12 @@ class UserTicketController extends Controller
                 'quantity' => $request->quantity,
                 'total' => $request->total,
             ]);
+            Log::info('Purchased Ticket Created Successfully', ['purchasedTicket' => $purchasedTicket]);
+
+            //  Attempt to send the email
+            Mail::to($request->userEmail)->send(new TicketPurchaseEmail($purchasedTicket));
+            Log::info('Email Sent Successfully');
+
 
             return response()->json(['message' => 'Ticket purchase successful!'], 200);
         } catch (Exception $e) {

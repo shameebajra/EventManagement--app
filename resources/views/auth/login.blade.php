@@ -7,15 +7,15 @@
 </head>
 <body>
 <div class="mx-auto md:h-screen flex flex-col justify-center items-center px-6 pt-8 pt:mt-0">
-    <a href="" class="text-2xl font-semibold flex justify-center items-center mb-8 lg:mb-10">
+    <a href="/" class="text-2xl font-semibold flex justify-center items-center mb-8 lg:mb-10">
         <img width="30" height="30" src="https://img.icons8.com/ios/50/ticket--v1.png" alt="ticket--v1"/>
-        <span class="self-center text-2xl lg:text-3xl font-bold whitespace-nowrap">EVENTS NP</span> 
+        <span class="self-center text-2xl lg:text-3xl font-bold whitespace-nowrap">EVENTS NP</span>
     </a>
     <!-- Card -->
     <div class="bg-white shadow rounded-lg md:mt-0 w-full sm:max-w-screen-sm xl:p-0">
         <div class="p-6 sm:p-8 lg:p-16 space-y-8">
                         <!-- Success Message -->
-                      
+
 
             <h2 class="text-2xl font-bold text-gray-900">
                 Sign in to platform
@@ -41,7 +41,7 @@
                     {{ session('error') }}
                 </div>
             @endif
-                
+
                 <button type="submit" class="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-base px-5 py-3 w-full sm:w-auto text-center">Login to your account</button>
                 <div class="text-sm font-medium text-gray-500">
                     Not registered? <a href="{{route('register.form')}}" class="text-teal-500 hover:underline">Create account</a>

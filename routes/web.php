@@ -8,6 +8,7 @@ use App\Http\Controllers\Vendor\EventController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Vendor\UpdateProfileController;
 use App\Http\Controllers\LandingPage\LandingPageController;
+use App\Http\Controllers\Mail\MailController;
 use App\Http\Controllers\Superadmin\SuperadminEventController;
 
 /*
@@ -20,6 +21,7 @@ use App\Http\Controllers\Superadmin\SuperadminEventController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 
 
 // Landing page
@@ -78,7 +80,6 @@ Route::middleware(['checkVendor'])->group(function() {
         Route::view('/events', 'vendor.events');
         Route::view('/add/events', 'vendor.addEvents');
         Route::view('/events/detail', 'vendor.eventDetail');
-        Route::view('/dashboard', 'vendor.dashboard');
 
         Route::controller(EventController::class)->group(function() {
             Route::post('/add/event', 'store')->name('add.event');
@@ -94,7 +95,7 @@ Route::middleware(['checkVendor'])->group(function() {
             Route::get('/event/sold-tickets/{id}', 'showSoldTickets')->name('event.sold.tickets');
 
             Route::get('/transaction','allTransaction')->name('event.transaction');
-
+            Route::get('/dashboard', 'dashboard')->name('vendor.dashboard');
 
 
             //search

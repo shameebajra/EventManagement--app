@@ -29,7 +29,7 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white">
-                        @foreach ($transactions as $transaction)
+                        @foreach ($transactions as $transaction )
                             <tr>
                                 <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
                                    <span class="font-semibold">{{$transaction->id}} </span>
@@ -48,8 +48,8 @@
                                 </td>  <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
                                     {{$transaction->quantity}}
                                 </td>
-                                <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                    {{$transaction->total}}
+                                <td class="p-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                                    Rs. {{$transaction->total}}
                                 </td>
                             </tr>
                         @endforeach
