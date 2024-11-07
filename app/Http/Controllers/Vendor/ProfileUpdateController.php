@@ -12,38 +12,26 @@ use Illuminate\Support\Facades\Log;
 class ProfileUpdateController extends Controller
 {
     public function profileUpdate(UpdateProfileRequest $request) {
-        dd ($request);
+        try {
+
+            $id = session('user_id');
+
+            // Ensure user exists in the database
+            $user = User::findOrFail($id);
+
+            // Update user data
+            $user->update([
+                'name' => $request->input('name'),
+                'phone_number' => $request->input('phone_number'),
+            ]);
+
+            return redirect()->back()->with('success', 'Profile updated successfully.');
+
+        } catch (Exception $e) {
+            Log::error('Profile update error', ['error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['message' => 'An unexpected error occurred. Please try again later.']);
+        }
     }
-
-    // public function updateProfile(UpdateProfileRequest $request) {
-    //     dd('Controller is working');
-    //     // try {
-    //     //     // Debugging: Check if the request is received
-    //     //     dd($request->all());  // Dump all input data
-
-    //     //     $id = session('user_id');
-
-    //     //     // Debugging: Check if session is being set
-    //     //     dd($id);  // Check if user_id is available in the session
-
-    //     //     // Ensure user exists in the database
-    //     //     $user = User::findOrFail($id);
-
-    //     //     // Update user data
-    //     //     $user->update([
-    //     //         'name' => $request->input('name'),
-    //     //         'phone_number' => $request->input('phone_number'),
-    //     //     ]);
-
-    //     //     return redirect()->back()->with('success', 'Profile updated successfully.');
-
-    //     // } catch (Exception $e) {
-    //     //     // Log error
-    //     //     Log::error('Profile update error', ['error' => $e->getMessage()]);
-    //     //     return redirect()->back()->withErrors(['message' => 'An unexpected error occurred. Please try again later.']);
-    //     // }
-    // }
-
 
     public function getProfile() {
         try {

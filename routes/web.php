@@ -103,7 +103,7 @@ Route::middleware(['checkVendor'])->group(function() {
             Route::get('/event/search', 'search')->name('event.search');
         });
 
-        Route::put('/profile/update', [ProfileUpdateController::class, 'profileUpdate'])->name('vendor.profile.update');
+        Route::post('/profile/update', [ProfileUpdateController::class, 'profileUpdate'])->name('vendor.profile.update');
         Route::get('/profile', [ProfileUpdateController::class, 'getProfile']);
 
 
