@@ -6,10 +6,10 @@ use Illuminate\Contracts\Session\Session;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Vendor\EventController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Vendor\UpdateProfileController;
 use App\Http\Controllers\LandingPage\LandingPageController;
 use App\Http\Controllers\Mail\MailController;
 use App\Http\Controllers\Superadmin\SuperadminEventController;
+use App\Http\Controllers\Vendor\ProfileUpdateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +23,6 @@ use App\Http\Controllers\Superadmin\SuperadminEventController;
 */
 
 
-
 // Landing page
 Route::get('setlang/{lang}', function($lang) {
     Session(['lang'=> $lang]);
@@ -35,6 +34,8 @@ Route::controller(LandingPageController::class)->group(function(){
     Route::get('/event/detail/{id}', 'eventDetail')->name('landingPage.event.detail');
     // Route::get('/', 'eventSearch')->name('landingpage.event.search');
 });
+
+Route::view('/change/password','auth.changePassword')->name('password.change');
 
 
 // Register Routes
@@ -102,14 +103,13 @@ Route::middleware(['checkVendor'])->group(function() {
             Route::get('/event/search', 'search')->name('event.search');
         });
 
+        Route::put('/profile/update', [ProfileUpdateController::class, 'profileUpdate'])->name('vendor.profile.update');
+        Route::get('/profile', [ProfileUpdateController::class, 'getProfile']);
 
-        Route::put('/profile/update', [UpdateProfileController::class,'updateProfile'])->name('profile.update');
-        Route::get('/profile', [UpdateProfileController::class, 'getProfile']);
 
-        //transaction
+
     });
 });
-
 
 
 

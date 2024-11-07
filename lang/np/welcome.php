@@ -9,4 +9,6 @@ return[
         "all_events"=>"सबै इभेन्तहरू",
         "my_tickets"=>"मेरो टिकट",
         "events"=>"इभेन्त",
+        "soldout"=>"बिक्री सकियो",
+        "create_event"=>"इभेन्त बनाउनुहोस्"
     ];

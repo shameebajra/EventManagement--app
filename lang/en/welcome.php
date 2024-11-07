@@ -9,6 +9,8 @@ return[
         "all_events"=>"All Events",
         "my_tickets"=>"My Tickets",
         "events"=>"Events",
+        "soldout"=>"Sold Out",
+        "create_event"=>"Create Event"
 
 ];
 

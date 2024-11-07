@@ -52,40 +52,40 @@
       <h2 class="text-3xl font-bold text-center mb-8">{{ __('welcome.all_events') }}</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         @foreach($events as $event)
-        @foreach($event->ticketTypes as $ticketType)
         <!-- Event Card -->
         <div class="event-card bg-white rounded-lg shadow-lg p-5">
-            <img src="{{ asset('/images/eventPoster/' . $event->poster) }}" alt="{{ $event->event_name }}"  class="rounded-lg mb-4" style="width: 350px; height: 300px;">
+            <img src="{{ asset('/images/eventPoster/' . $event->poster) }}" alt="{{ $event->event_name }}" class="rounded-lg mb-4" style="width: 350px; height: 300px;">
 
-          <div class="text-gray-800 text-xl font-bold">{{ $event->event_name }}</div>
-          <div class="text-gray-600">{{ \Carbon\Carbon::parse($event->date)->format('d M') }}</div>
-          {{-- <div class="text-pink-500 text-2xl font-bold">Rs. {{ number_format($event->price) }}</div> --}}
-          @if($ticketType->quantity == 0)
-            <button type="submit" class="mt-4 bg-red-900 text-white px-4 py-2 rounded-full">
-              {{-- {{ __('welcome.soldout') }} --}}
-              Sold out
+            <div class="text-gray-800 text-xl font-bold">{{ $event->event_name }}</div>
+            <div class="text-gray-600">{{ \Carbon\Carbon::parse($event->date)->format('d M') }}</div>
 
-            </button>
+            @php
+                // Check if all ticket types are sold out
+                $allSoldOut = $event->ticketTypes->every(fn($ticketType) => $ticketType->quantity == 0);
+            @endphp
 
-          @elseif ($event->event_status === 'active')
-          <form action="{{ route('landingPage.event.detail', $event->id) }}" method="GET">
-              <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700">
-                {{ __('welcome.book') }}
-
-              </button>
-          </form>
-          @elseif($event->event_status === 'postponed')
-        <div class="mt-4 text-red-500 font-bold text-xl">
-            {{ __('welcome.postponed') }}
+            @if ($allSoldOut)
+                <button class="mt-4 bg-red-900 text-white px-4 py-2 rounded-full">
+                    {{ __('welcome.soldout') }}
+                </button>
+            @elseif ($event->event_status === 'active')
+                <form action="{{ route('landingPage.event.detail', $event->id) }}" method="GET">
+                    <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700">
+                        {{ __('welcome.book') }}
+                    </button>
+                </form>
+            @elseif ($event->event_status === 'postponed')
+                <div class="mt-4 text-red-500 font-bold text-xl">
+                    {{ __('welcome.postponed') }}
+                </div>
+            @elseif ($event->event_status === 'cancelled')
+                <div class="mt-4 text-red-500 font-bold text-xl">
+                    {{ __('welcome.cancelled') }}
+                </div>
+            @endif
         </div>
-         @elseif($event->event_status === 'cancelled')
-        <div class="mt-4 text-red-500 font-bold text-xl">
-            {{ __('welcome.cancelled') }}
-        </div>
-        @endif
-        </div>
-        @endforeach
-        @endforeach
+    @endforeach
+
 
       </div>
     </div>

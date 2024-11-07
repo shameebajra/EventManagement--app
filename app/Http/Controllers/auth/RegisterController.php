@@ -12,13 +12,13 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
-    
-    public function register(RegisterRequest $request){
-    
 
-        $roleId = null; 
+    public function register(RegisterRequest $request){
+
+
+        $roleId = null;
         if ($request->is('register')) {
-            $roleId = 3; 
+            $roleId = 3;
         } if ($request->is('register/super-admin')) {
             $roleId = 1;
         } elseif ($request->is('register/vendor')) {
@@ -27,13 +27,13 @@ class RegisterController extends Controller
 
 
         try {
-                 if ($roleId !== null) {       
+                 if ($roleId !== null) {
                 User::create([
                     'email' => $request->email,
                     'name'=> $request->name,
                     'phone_number' => $request->phone_number,
                     'password' => Hash::make($request->password),
-                    'role_id' => $roleId, 
+                    'role_id' => $roleId,
                 ]);
 
                 if ($request->is('register/super-admin')) {
@@ -46,11 +46,8 @@ class RegisterController extends Controller
             } else {
                 return redirect()->back()->withErrors(['error' => 'Invalid registration route.']);
             }
-        } catch (QueryException $e) {
-            return redirect()->back()->withErrors(['error' => 'There was an issue with the database. Please try again later.']);
-        } catch (Exception $e) {
+        }catch (Exception $e) {
             return redirect()->back()->withErrors(['error' => 'An unexpected error occurred. Please try again later.']);
         }
     }
 }
-    
