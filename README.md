@@ -37,12 +37,12 @@ Generate an application encryption key:
 php artisan key:generate
 ```
 7. Run the Application
-*For Backend
+⋅⋅* For Backend
 Start the Laravel application on your local server:
 ```
 php artisan serve
 ```
-*For Frontend
+⋅⋅* For Frontend
 Start the frontend development server:
 ```
 npm run dev
