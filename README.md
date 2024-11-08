@@ -10,7 +10,6 @@ Follow these steps to set up the project on your local machine.
 1. Clone the Repository
 ```
 git clone https://github.com/shameebajra/EventManagement--app.git
-change .env.example to .env
 ```
 2. Set Up Environment Variables
 Copy the .env.example file and rename it to .env:
@@ -38,11 +37,17 @@ Generate an application encryption key:
 php artisan key:generate
 ```
 7. Run the Application
-Start the application on your local server:
++For Backend
+Start the Laravel application on your local server:
 ```
 php artisan serve
 ```
-Open http://localhost:8000 in your browser to see the app.
++For Frontend
+Start the frontend development server:
+```
+npm run dev
+```
+Open http://localhost:8000 in your browser to see the backend and frontend served locally.
 
 ## Further Ideas
 
