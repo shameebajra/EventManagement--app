@@ -23,10 +23,8 @@
 
     <title>{{ isset($page->title) ? $page->title : config('app.name') }}</title>
     <link rel="canonical" href="https://themesberg.com/product/tailwind-css/dashboard-windster">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    @if(isset($page->robots))
-        <meta name="robots" content="{{ $page->robots }}">
-    @endif
 
     {{-- Include Stylesheet --}}
     @include('partials.stylesheet')

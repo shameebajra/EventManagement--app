@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\LandingPage\LandingPageController;
 use App\Http\Controllers\Mail\MailController;
 use App\Http\Controllers\Superadmin\SuperadminEventController;
+use App\Http\Controllers\Vendor\EventTransactionController;
 use App\Http\Controllers\Vendor\ProfileUpdateController;
 
 /*
@@ -90,23 +91,28 @@ Route::middleware(['checkVendor'])->group(function() {
             Route::put('/event/edit/{id}', 'update')->name('events.update');
 
             Route::delete('/event/delete/{id}', 'destroy')->name('events.delete');
+            Route::delete('/event/ticket/delete/{id}', 'ticketDestroy')->name('ticket.delete');
+
 
             Route::get('/event/detail/{id}', 'showEventDetail')->name('event.detail');
 
             Route::get('/event/sold-tickets/{id}', 'showSoldTickets')->name('event.sold.tickets');
-
-            Route::get('/transaction','allTransaction')->name('event.transaction');
-            Route::get('/dashboard', 'dashboard')->name('vendor.dashboard');
 
 
             //search
             Route::get('/event/search', 'search')->name('event.search');
         });
 
-        Route::post('/profile/update', [ProfileUpdateController::class, 'profileUpdate'])->name('vendor.profile.update');
+        Route::controller(EventTransactionController::class)->group(function() {
+            Route::get('/transaction','allTransaction')->name('event.transaction');
+            Route::get('/dashboard', 'dashboard')->name('vendor.dashboard');
+
+            Route::get('/transaction/search', 'searchTransaction')->name('ticket.search');
+        });
+
+
+        Route::put('/profile/update', [ProfileUpdateController::class, 'profileUpdate'])->name('vendor.profile.update');
         Route::get('/profile', [ProfileUpdateController::class, 'getProfile']);
-
-
 
     });
 });

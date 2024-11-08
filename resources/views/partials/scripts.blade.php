@@ -115,3 +115,36 @@
 
 </script>
 
+<script>
+   function deleteTicketType(ticketId) {
+    if (!confirm("Are you sure you want to delete this ticket type?")) {
+        return;
+    }
+
+    console.log("Deleting ticket type ID:", ticketId); // Debug log
+
+    fetch(`/ticket/${ticketId}`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Response data:", data); // Debug log
+
+        if (data.success) {
+            document.getElementById(`ticket-type-${ticketId}`).remove();
+            alert("Ticket type deleted successfully.");
+        } else {
+            alert(data.error || "Error deleting ticket type.");
+        }
+    })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred. Please try again.");
+        });
+    }
+
+</script>

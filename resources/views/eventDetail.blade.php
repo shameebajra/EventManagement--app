@@ -26,11 +26,15 @@
           <i class="fas fa-map-marker-alt mr-2"></i>
           <span>{{$event->venue}}, {{$event->location}}</span>
         </div>
+        @if(Session('role_id')=== 3)
         <div class="mt-6 flex items-center justify-between">
-          <span class="text-2xl">Rs. 1500</span>
-          {{-- <a href="{{ route('events.edit', $event->id) }}" class="bg-red-500 text-white py-2 px-6 rounded-lg shadow-md hover:bg-red-700"> --}}
             <button id="bookNowBtn" value="{{$event->id}}" class="bg-red-500 text-white py-2 px-6 rounded-lg shadow-md bookbtn">Book Now</button>
         </div>
+        @elseif(Session('role_id')=== 1)
+        <div class="mt-6 flex items-center justify-between">
+            <a class="bg-red-500 text-white py-2 px-6 rounded-lg shadow-md ">Access Restricted: Vendor accounts are not permitted to purchase ticket.</a>
+        </div>
+        @endif
       </div>
     </div>
   </section>
@@ -55,7 +59,7 @@
 
 
         <p>Organizer</p>
-        <img src="/image/img2.png" alt="Kuza Entertainment" class="h-16 w-16 mt-4">
+        {{-- <img src="/image/img2.png" alt="Kuza Entertainment" class="h-16 w-16 mt-4"> --}}
       </div>
       <!-- Terms & Conditions -->
       <div class="bg-white p-6 rounded-lg shadow-lg">
@@ -92,7 +96,6 @@
         <form action="{{ route('event.book') }}" method="POST">
         @csrf
 
-          {{-- <input type="hidden" id="event_id" name="event_id" > --}}
           <!-- Ticket Type -->
           <div class="mb-4">
             <label for="ticketTypeSelect" class="block text-gray-700 font-bold mb-2">Select Ticket Type</label>
@@ -139,11 +142,7 @@
         </div>
       </div>
 @endauth
-@guest
-<script>
-    window.location.href = "{{ route('login.form') }}";
-</script>
-@endguest
+
 
 
 @endsection

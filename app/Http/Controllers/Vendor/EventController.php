@@ -23,7 +23,7 @@ class EventController extends Controller
     {
         try {
             DB::beginTransaction();
-            $user_id = Session::get('user_id'); // Get the user ID from the session
+            $user_id = Session::get('user_id');
             $poster = null;
 
             $poster = $request->poster;
@@ -81,7 +81,7 @@ class EventController extends Controller
      */
     public function show()
     {
-        $events = Event::where('user_id',session('user_id'))->latest('updated_at')->first()->get();
+        $events = Event::where('user_id',session('user_id'))->latest('updated_at')->first()->paginate(10);
 
         return view('vendor.events', compact('events'));
     }
@@ -149,7 +149,6 @@ class EventController extends Controller
 
             $event = Event::with('ticketTypes')->findOrFail($id);
 
-            // Check if the user is authorized to update this event
             if ($event->user_id !== $user_id) {
                 return redirect()->back()->with('error', 'Unauthorized action. You cannot update this event.');
             }
@@ -161,11 +160,11 @@ class EventController extends Controller
                 $posterName = time() . '.' . $extension;
                 $poster->move(public_path('/images/eventPoster'), $posterName);
 
-                // If a new poster is uploaded, delete the old one (optional)
+                // If a new poster is uploaded, delete the old one
                 if ($event->poster && $event->poster !== "0.png") {
                     $oldPosterPath = public_path('/images/eventPoster/' . $event->poster);
                     if (file_exists($oldPosterPath)) {
-                        unlink($oldPosterPath); // Delete the old poster file
+                        unlink($oldPosterPath);
                     }
                 }
             } else {
@@ -195,7 +194,7 @@ class EventController extends Controller
                 if (isset($ticket['id'])) {
                     // Existing ticket, update it
                     $ticketType = TicketType::where('id', $ticket['id'])
-                        ->where('event_id', $event->id) // Ensure it belongs to the correct event
+                        ->where('event_id', $event->id)
                         ->first();
 
                     if ($ticketType) {
@@ -271,6 +270,32 @@ class EventController extends Controller
         }
     }
 
+    public function ticketDestroy(string $id){
+     try {
+        $user_id = Session::get('user_id');
+        Log::info("Deleting ticket ID: {$id} for user ID: {$user_id}");
+
+        $ticketType = TicketType::where('id', $id)
+            ->whereHas('event', function($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            })
+            ->first();
+
+        if ($ticketType) {
+            $ticketType->delete();
+            Log::info("Ticket ID {$id} deleted successfully.");
+
+            return response()->json(['success' => 'Ticket deleted successfully.']);
+        } else {
+            Log::warning("Ticket ID {$id} not found or not authorized.");
+            return response()->json(['error' => 'Ticket not found or not authorized.']);
+        }
+    } catch (Exception $e) {
+        Log::error('Ticket deletion error: ' . $e->getMessage());
+        return response()->json(['error' => 'An error occurred while deleting the ticket.']);
+    }
+    }
+
 
     public function search(Request $request){
         try{
@@ -281,7 +306,7 @@ class EventController extends Controller
                     ->when($search, function($query, $search) {
                         return $query->where('event_name', 'ilike', "%{$search}%")
                                      ->orWhere('event_type', 'ilike', "%{$search}%");
-                    })->latest('updated_at')->get();
+                    })->latest('updated_at')->paginate(10);
 
         return view('vendor.events', compact('events'))->with('search', $search);
         }catch(Exception $e){
@@ -324,35 +349,6 @@ class EventController extends Controller
         }
     }
 
-    public function allTransaction(){
-        try{
-            $transactions = $this->transaction();
 
-             return view('vendor.transaction', compact('transactions'));
-        }catch (Exception $e) {
-            Log::error(message: 'Transacions error: ' . $e->getMessage());
-            return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
-        }
-    }
-
-    public function transaction(){
-        $transactions = PurchasedTicket::with(['ticketTypes.event'])
-                            ->whereHas('ticketTypes.event',function($query){
-                                $query->where('user_id', Session('user_id'));
-                            })->latest()->get();
-
-         return $transactions;
-    }
-
-    public function dashboard(){
-        try{
-            $transactions = $this->transaction();
-
-             return view('vendor.dashboard', compact('transactions'));
-        }catch (Exception $e) {
-            Log::error(message: 'Transacions error: ' . $e->getMessage());
-            return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
-        }
-    }
 }
 

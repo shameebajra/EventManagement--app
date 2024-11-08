@@ -13,7 +13,7 @@
             <!-- Profile Update Form -->
             <form action="{{route('vendor.profile.update')}}" method="POST">
                 @csrf
-                {{-- @method('PUT') --}}
+                @method('PUT')
                 <div class="grid grid-cols-6 gap-6">
 
                     <!-- Email -->

@@ -1,5 +1,25 @@
 @extends('layouts.app')
 @section('content')
+<div class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5">
+    <div class="mb-1 w-full">
+        <div class="mb-4">
+            <h1 class="text-xl sm:text-2xl font-semibold text-gray-900">All Sold Tickets</h1>
+        </div>
+
+        <div class="block sm:flex items-center md:divide-x md:divide-gray-100">
+            <form class="sm:pr-3 mb-4 sm:mb-0" action="{{ route('ticket.search') }}" method="GET">
+                @csrf
+                <label for="products-search" class="sr-only">Search</label>
+                <div class="mt-1 relative sm:w-64 xl:w-96">
+                    <input type="text" name="search" id="search" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5" placeholder="Search here" value="{{ isset($search) ? $search : '' }}">
+                </div>
+            </form>
+            <div class="flex items-center sm:justify-end w-full">
+
+            </div>
+        </div>
+    </div>
+</div>
 <div class="flex flex-col mt-8">
     <div class="overflow-x-auto rounded-lg">
         <div class="align-middle inline-block min-w-full">
@@ -57,6 +77,12 @@
                 </table>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="flex justify-center">
+    <div class="pagination mt-4">
+        {{$transactions->links('pagination::tailwind')}}
     </div>
 </div>
 
