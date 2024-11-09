@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Vendor;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\UpdateProfileRequest;
@@ -38,7 +38,7 @@ class ProfileUpdateController extends Controller
             $id = session('user_id');
             $user = User::findOrFail($id);
 
-            return view('vendor.profileUpdate', compact('user'));
+            return view('auth.profileUpdate', compact('user'));
         } catch (Exception $e) {
             Log::error('Error retrieving user profile', ['error' => $e->getMessage()]);
             return redirect()->back()->withErrors(['error' => 'An unexpected error occurred. Please try again later.']);

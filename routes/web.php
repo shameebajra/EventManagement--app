@@ -4,13 +4,12 @@ use App\Http\Controllers\User\UserTicketController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Session\Session;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ProfileUpdateController;
 use App\Http\Controllers\Vendor\EventController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\LandingPage\LandingPageController;
-use App\Http\Controllers\Mail\MailController;
 use App\Http\Controllers\Superadmin\SuperadminEventController;
 use App\Http\Controllers\Vendor\EventTransactionController;
-use App\Http\Controllers\Vendor\ProfileUpdateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +62,10 @@ Route::controller(LoginController::class)->group(function() {
 
 });
 
+//Update Profile
+Route::put('/profile/update', [ProfileUpdateController::class, 'profileUpdate'])->name('profile.update');
+Route::get('/profile', [ProfileUpdateController::class, 'getProfile']);
+
 
 // User Routes
 Route::middleware(['checkUser'])->group(function(){
@@ -111,8 +114,8 @@ Route::middleware(['checkVendor'])->group(function() {
         });
 
 
-        Route::put('/profile/update', [ProfileUpdateController::class, 'profileUpdate'])->name('vendor.profile.update');
-        Route::get('/profile', [ProfileUpdateController::class, 'getProfile']);
+        // Route::put('/profile/update', [ProfileUpdateController::class, 'profileUpdate'])->name('vendor.profile.update');
+        // Route::get('/profile', [ProfileUpdateController::class, 'getProfile']);
 
     });
 });
