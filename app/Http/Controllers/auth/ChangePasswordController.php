@@ -7,42 +7,42 @@ use App\Http\Requests\Auth\ChangePasswordRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
+use Exception;
 
 class ChangePasswordController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
+
     public function __invoke(ChangePasswordRequest $request)
     {
-        // Check if the current password is correct
-        if (!Hash::check($request->current_password, Auth::user()->password)) {
-            return redirect()->back()->withErrors(['current_password' => 'The current password is incorrect.']);
-        }
-
-        // Begin a transaction
         DB::beginTransaction();
 
         try {
             // Get the authenticated user
-            $user = Auth::user();
+            $user = \App\Models\User::find(Auth::id());
 
-            // Update the user's password
-            $user->update([
-                'password' => Hash::make($request->new_password),
-            ]);
+            if (!$user) {
+                return redirect()->back()->withErrors(['error' => 'No authenticated user found.']);
+            }
 
-            // Commit the transaction
+            // Check current password is correct
+            if (!Hash::check($request->current_password, $user->password)) {
+                throw ValidationException::withMessages([
+                    'current_password' => 'Your current password does not match our records.',
+                ]);
+            }
+
+            // Update password
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+
             DB::commit();
 
-            // Return success message
             return redirect()->back()->with('success', 'Password successfully updated.');
 
-        } catch (\Exception $e) {
-            // Rollback the transaction if an error occurs
+        } catch (Exception $e) {
             DB::rollBack();
 
-            // Return an error message
             return redirect()->back()->withErrors(['error' => 'An unexpected error occurred. Please try again later.']);
         }
     }

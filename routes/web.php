@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\User\UserTicketController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Contracts\Session\Session;
@@ -35,7 +36,7 @@ Route::controller(LandingPageController::class)->group(function(){
     // Route::get('/', 'eventSearch')->name('landingpage.event.search');
 });
 
-Route::view('/change/password','auth.changePassword')->name('password.change');
+
 
 
 // Register Routes
@@ -57,14 +58,22 @@ Route::controller(LoginController::class)->group(function() {
     Route::view('/login', 'auth.login')->name('login.form');
     Route::post('/login', 'login')->name('login');
 
-    Route::get('/logout', 'logout')->name('logout');
-    Route::post('/logout', 'logout')->name('logout');
 
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/logout', 'logout')->name('logout');
+        Route::post('/logout', 'logout')->name('logout');
+    });
 });
 
-//Update Profile
-Route::put('/profile/update', [ProfileUpdateController::class, 'profileUpdate'])->name('profile.update');
-Route::get('/profile', [ProfileUpdateController::class, 'getProfile']);
+Route::middleware(['auth'])->group(function () {
+    //change password
+    Route::view('/change/password', 'auth.changePassword');
+    Route::post('/change/password', [ChangePasswordController::class, '__invoke'])->name('password.change');
+
+    //Update Profile
+    Route::put('/profile', [ProfileUpdateController::class, 'profileUpdate'])->name('profile.update');
+    Route::get('/profile', [ProfileUpdateController::class, 'getProfile'])->name('profile.view');
+});
 
 
 // User Routes
@@ -112,11 +121,6 @@ Route::middleware(['checkVendor'])->group(function() {
 
             Route::get('/transaction/search', 'searchTransaction')->name('ticket.search');
         });
-
-
-        // Route::put('/profile/update', [ProfileUpdateController::class, 'profileUpdate'])->name('vendor.profile.update');
-        // Route::get('/profile', [ProfileUpdateController::class, 'getProfile']);
-
     });
 });
 

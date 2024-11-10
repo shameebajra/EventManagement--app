@@ -22,6 +22,7 @@ class LoginController extends Controller
                 'role_id' => $user->role_id,
                 'user_id'=>$user->id,
                 'user_name'=>$user->name,
+                'user_email'=>$user->email,
             ]);
             switch($user->role_id){
                 case 1:

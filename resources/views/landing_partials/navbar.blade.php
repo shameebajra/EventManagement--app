@@ -38,11 +38,22 @@
         <div class="flex items-center space-x-4">
             @guest
             <a href="{{ url('register/vendor') }}" class="bg-pink-500 text-white px-4 py-2 rounded-full inline-block text-xl">Create Event</a>
+
             <a href="{{ url('login') }}" class="bg-pink-500 text-white px-4 py-2 rounded-full inline-block text-xl">Log In</a>
             @endguest
 
             @auth
                 <a href="#" class="text-gray-700 hover:text-blue-500 font-bold text-xl">Hello, {{ Session('user_name') }}</a>
+              <!-- Update Profile Button -->
+                <a href="{{ url('/profile') }}" class="bg-cyan-600 text-white px-4 py-2 rounded-full inline-block text-xl hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200">
+                    Update Profile
+                </a>
+
+                <!-- Change Password Button -->
+                <a href="{{ url('/change/password') }}" class="bg-green-500 text-white px-4 py-2 rounded-full inline-block text-xl hover:bg-green-600 focus:ring-4 focus:ring-green-200">
+                    Change Password
+                </a>
+
                 <a href="{{ route('logout') }}" class="bg-pink-500 text-white px-4 py-2 rounded-full inline-block text-xl">Log out</a>
             @endauth
 
