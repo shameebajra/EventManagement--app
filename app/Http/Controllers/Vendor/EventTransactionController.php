@@ -32,20 +32,7 @@ class EventTransactionController extends Controller
          return $transactions;
     }
 
-    public function dashboard(){
-        try{
-            $transactions = $this->transaction();
-            $totalEvents = Event::where('user_id', Session('user_id'))->count();
-
-
-             return view('vendor.dashboard', compact('transactions','totalEvents'));
-        }catch (Exception $e) {
-            Log::error(message: 'Transacions error: ' . $e->getMessage());
-            return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
-        }
-    }
-
-    public function searchTransaction(Request $request){
+      public function searchTransaction(Request $request){
         try {
             $search = $request->input('search');
             $userId = Session::get('user_id');
@@ -65,6 +52,31 @@ class EventTransactionController extends Controller
             return view('vendor.transaction', compact('transactions'));
         } catch (Exception $e) {
             Log::error('Transaction search error: ' . $e->getMessage());
+            return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
+        }
+    }
+
+    public function dashboard(){
+        try{
+            $transactions = $this->transaction();
+            $totalEvents = Event::where('user_id', Session('user_id'))->count();
+
+            $events = Event::where('user_id', Session('user_id'))->latest()->get();
+
+            $totalTicketSales = PurchasedTicket::with(['ticketTypes.event'])
+                                ->whereHas('ticketTypes.event', function ($query) {
+                                    $query->where('user_id', Session('user_id'));
+                                })
+                                ->sum('total');
+
+            $totalTicketSold=PurchasedTicket::with(['ticketTypes.event',])
+                            ->whereHas('ticketTypes.event', function($query){
+                                $query->where('user_id', Session('user_id'));
+                            })->count();
+
+             return view('vendor.dashboard', compact('transactions','totalEvents', 'events','totalTicketSales','totalTicketSold'));
+        }catch (Exception $e) {
+            Log::error(message: 'Transacions error: ' . $e->getMessage());
             return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
         }
     }

@@ -21,6 +21,7 @@
           <div>
             <h1 class="text-3xl font-bold text-blue-900">{{$event->event_name}}</h1>
             <span>{{$event->event_type}}</span>
+            <p class="text-sm font-bold text-black-500">{{ $event->user->name }}</p>
 
             <div class="flex items-center text-gray-500 mt-2">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" stroke="currentColor" fill="none">

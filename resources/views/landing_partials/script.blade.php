@@ -8,18 +8,21 @@
             }
         });
 
+        // Show the modal when the book button is clicked
         $(document).on('click', '.bookbtn', function() {
             var event_id = $(this).val();
-            $('#bookingModal').removeClass('hidden'); 
+            $('#bookingModal').removeClass('hidden');
+
+            // Set initial ticket quantity to 1 and total price to 0.00
+            $('#ticketCount').text(1);
+            $('#totalPrice').text('0.00');
 
             $.ajax({
                 type: "GET",
                 url: "/event/" + event_id,
                 success: function(response) {
-                    console.log(response); // Debugging log
-
                     if (response.event) {
-                        // Display event date
+                        // Display event date and time
                         const date = new Date(response.event.date);
                         const time = response.event.time;
 
@@ -45,22 +48,13 @@
                         // Check and display ticket details
                         if (response.event.ticket_types && response.event.ticket_types.length > 0) {
                             let ticketOptions = '<option value="" disabled selected>Select a ticket</option>';
-
                             response.event.ticket_types.forEach(ticket => {
-                                ticketOptions += `
-                                    <option value="${ticket.price}" data-ticket-type="${ticket.ticket_type}" data-ticket-id="${ticket.id}">
-                                        ${ticket.ticket_type} - Rs. ${ticket.price}
-                                    </option>
-                                `;
+                                ticketOptions += `<option value="${ticket.price}" data-ticket-type="${ticket.ticket_type}" data-ticket-id="${ticket.id}" data-price="${ticket.price}">${ticket.ticket_type} - Rs. ${ticket.price}</option>`;
                             });
-
                             $('#ticketTypeSelect').html(ticketOptions);
                         } else {
-                            console.warn('No ticket data found');
                             $('#ticketTypeSelect').html('<option value="" disabled>No tickets available</option>');
                         }
-                    } else {
-                        console.warn('Event data not found');
                     }
                 },
                 error: function(xhr, status, error) {
@@ -71,65 +65,68 @@
 
         // Update total price when ticket type or count changes
         $('#ticketTypeSelect').on('change', function() {
-            const selectedPrice = parseFloat($(this).val());
+            const selectedOption = $('#ticketTypeSelect option:selected');
+            const selectedPrice = parseFloat(selectedOption.data('price'));
             const ticketCount = parseInt($('#ticketCount').text());
             $('#totalPrice').text((selectedPrice * ticketCount).toFixed(2));
         });
 
-        $('#increase').on('click', function() {
+        // Increase ticket count
+        $('#increase').on('click', function(event) {
+            event.preventDefault(); // Prevent default button behavior
             let count = parseInt($('#ticketCount').text());
-            count++;
-            $('#ticketCount').text(count);
-
-            const selectedPrice = parseFloat($('#ticketTypeSelect').val());
-            if (!isNaN(selectedPrice)) {
-                $('#totalPrice').text((selectedPrice * count).toFixed(2));
+            if (!isNaN(count)) {
+                count++; // Increment the count by 1
+                $('#ticketCount').text(count);  // Update quantity display
+                updateTotalPrice();
             }
         });
 
-        $('#decrease').on('click', function() {
+        // Decrease ticket count
+        $('#decrease').on('click', function(event) {
+            event.preventDefault(); // Prevent default button behavior
             let count = parseInt($('#ticketCount').text());
-            if (count > 1) {
-                count--;
-                $('#ticketCount').text(count);
-
-                const selectedPrice = parseFloat($('#ticketTypeSelect').val());
-                if (!isNaN(selectedPrice)) {
-                    $('#totalPrice').text((selectedPrice * count).toFixed(2));
-                }
+            if (count > 1) {  // Ensure quantity does not go below 1
+                count--; // Decrement the count by 1
+                $('#ticketCount').text(count);  // Update quantity display
+                updateTotalPrice();
             }
         });
 
-        // Close button logic
+        // Close modal
         $('#closeModalBtn, #cancelBtn').on('click', function() {
             $('#bookingModal').addClass('hidden'); // Hide the modal
         });
 
         // Handle the booking form submission
         $('#bookBtn').on('click', function() {
-            // Get form data
-            const ticketType = $('#ticketTypeSelect option:selected').data('ticket-type'); 
+            var button = $(this);
+            button.prop('disabled', true);
+            button.text('Booking...');
+
+            const selectedOption = $('#ticketTypeSelect option:selected');
+            const ticketId = selectedOption.data('ticket-id');
+            const ticketType = selectedOption.data('ticket-type');
             const quantity = parseInt($('#ticketCount').text());
             const totalPrice = parseFloat($('#totalPrice').text());
 
-            // Create a form data object
             const formData = {
-                ticket_id: $('#ticketTypeSelect').find(':selected').data('ticket-id'),
+                ticket_id: ticketId,
+                ticket_type: ticketType,
                 quantity: quantity,
-                total: totalPrice, 
-                userName: $('#userName').val(), 
-                userEmail: $('#userEmail').val(), 
-                userPhoneNumber: $('#userPhoneNumber').val(), 
+                total: totalPrice,
+                userName: $('#userName').val(),
+                userEmail: $('#userEmail').val(),
+                userPhoneNumber: $('#userPhoneNumber').val(),
             };
 
-            // AJAX request to submit the form
             $.ajax({
                 type: "POST",
-                url: "{{ route('event.book') }}", 
+                url: "{{ route('event.book') }}",
                 data: formData,
                 success: function(response) {
-                    alert('Booking successful!'); 
-                    $('#bookingModal').addClass('hidden'); 
+                    alert('Booking successful!');
+                    $('#bookingModal').addClass('hidden'); // Hide modal after success
                 },
                 error: function(xhr) {
                     const errors = xhr.responseJSON.errors;
@@ -138,12 +135,24 @@
                         $.each(errors, function(key, value) {
                             errorMsg += value[0] + '\n';
                         });
-                        alert('There were errors:\n' + errorMsg); 
+                        alert('There were errors:\n' + errorMsg);
                     } else {
-                        alert('There was an error with your booking. Please try again.'); 
+                        alert('There was an error with your booking. Please try again.');
                     }
+                },
+                complete: function() {
+                    button.prop('disabled', false);
+                    button.text('Book');
                 }
             });
         });
+
+        // Update total price
+        function updateTotalPrice() {
+            const selectedOption = $('#ticketTypeSelect option:selected');
+            const selectedPrice = parseFloat(selectedOption.data('price'));
+            const ticketCount = parseInt($('#ticketCount').text());
+            $('#totalPrice').text((selectedPrice * ticketCount).toFixed(2));
+        }
     });
 </script>

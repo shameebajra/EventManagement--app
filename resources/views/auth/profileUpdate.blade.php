@@ -5,7 +5,7 @@
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <!-- Profile Picture and Info -->
         <div class="flex flex-col items-center">
-            <img src="https://via.placeholder.com/100" alt="Profile" class="rounded-full w-24 h-24 mb-4">
+            <img src="{{ asset('images/user.png') }}" alt="Profile" class="rounded-full w-24 h-24 mb-4">
             <h2 class="text-lg font-semibold">{{ $user->name }}</h2>
             <p class="text-gray-500 mb-2">{{ $user->email }}</p>
             <p class="text-gray-400 text-sm">{{$user->phone_number}}</p>

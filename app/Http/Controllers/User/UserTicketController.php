@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\PurchasedTicket;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendTicketPurchaseEmail;
 use App\Mail\TicketPurchaseEmail;
 
 use App\Models\TicketType;
@@ -51,17 +52,15 @@ class UserTicketController extends Controller
                 'quantity' => $request->quantity,
                 'total' => $request->total,
             ]);
-            Log::info('Purchased Ticket Created Successfully', ['purchasedTicket' => $purchasedTicket]);
 
             //decrease quantity in ticketTypes on ticket purchase
             $ticket = $purchasedTicket->ticketTypes;
             $ticket->quantity = $ticket->quantity - $request->quantity;
             $ticket->save();
 
-            Log::info('Quantity Decrease error', ['event' => $ticket]);
 
             //  Attempt to send the email
-            Mail::to($request->userEmail)->send(new TicketPurchaseEmail($purchasedTicket));
+            SendTicketPurchaseEmail::dispatch($purchasedTicket, $request->userEmail);
             Log::info('Email Sent Successfully');
 
 
@@ -79,7 +78,6 @@ class UserTicketController extends Controller
             ->where('user_id', Session('user_id'))
             ->latest()
             ->get();
-            // dd($purchasedTickets->all());
 
             return view('user.myPurchasedTicket', compact('purchasedTickets'));
         }catch (Exception $e) {

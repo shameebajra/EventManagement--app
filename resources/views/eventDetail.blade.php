@@ -26,15 +26,26 @@
           <i class="fas fa-map-marker-alt mr-2"></i>
           <span>{{$event->venue}}, {{$event->location}}</span>
         </div>
-        @if(Session('role_id')=== 3)
+        @if(Session('role_id') === 3)
+        <!-- Show the "Book Now" button for users with role_id 3 -->
         <div class="mt-6 flex items-center justify-between">
-            <button id="bookNowBtn" value="{{$event->id}}" class="bg-red-500 text-white py-2 px-6 rounded-lg shadow-md bookbtn">Book Now</button>
+            <button id="bookNowBtn" value="{{ $event->id }}" class="bg-red-500 text-white py-2 px-6 rounded-lg shadow-md bookbtn">Book Now</button>
         </div>
-        @elseif(Session('role_id')=== 1)
+        @elseif(Session('role_id') === 1||Session('role_id') === 2)
+        <!-- Show the "Book Now" button for users with role_id 3 -->
         <div class="mt-6 flex items-center justify-between">
-            <a class="bg-red-500 text-white py-2 px-6 rounded-lg shadow-md ">Access Restricted: Vendor accounts are not permitted to purchase ticket.</a>
+            <a href="" class="bg-blue-500 text-white py-2 px-6 rounded-lg shadow-md">
+             You are not allowed to book.
+            </a>
         </div>
-        @endif
+          @else
+        <!-- Redirect to login page if not role_id 3 -->
+        <div class="mt-6 flex items-center justify-between">
+            <a href="{{ route('login') }}" class="bg-blue-500 text-white py-2 px-6 rounded-lg shadow-md">
+                Please log in to purchase tickets.
+            </a>
+        </div>
+    @endif
       </div>
     </div>
   </section>
@@ -72,76 +83,76 @@
     </div>
   </section>
 
-                                                                                                                                                                                --}}
+
 
 
 @auth
-    <!-- Booking Modal (hidden by default) -->
-    <div id="bookingModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
-          <!-- Close Button -->
-          <button id="closeModalBtn" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800">&times;</button>
+<!-- Booking Modal (hidden by default) -->
+<div id="bookingModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+<div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
+<!-- Close Button -->
+<button id="closeModalBtn" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800">&times;</button>
 
-          <!-- Booking Form Content -->
-          <h2 class="text-xl font-bold mb-4">Continue Booking</h2>
-          <p class="text-gray-600 mb-4">Select a date to continue booking</p>
+<!-- Booking Form Content -->
+<h2 class="text-xl font-bold mb-4">Continue Booking</h2>
+<p class="text-gray-600 mb-4">Select a date to continue booking</p>
 
-          <!-- Event Date and Time -->
-          <div class="flex items-center justify-between bg-blue-500 text-white py-2 px-4 rounded-lg mb-4">
-            <div id="eventDate"class="font-bold"></div>
-            <div id="eventTime"></div>
-          </div>
+<!-- Event Date and Time -->
+<div class="flex items-center justify-between bg-blue-500 text-white py-2 px-4 rounded-lg mb-4">
+<div id="eventDate" class="font-bold"></div>
+<div id="eventTime"></div>
+</div>
 
-           <!-- Booking Form -->
-        <form action="{{ route('event.book') }}" method="POST">
-        @csrf
+<!-- Booking Form -->
+<form id="bookingForm" action="{{ route('event.book') }}" method="POST">
+@csrf
 
-          <!-- Ticket Type -->
-          <div class="mb-4">
-            <label for="ticketTypeSelect" class="block text-gray-700 font-bold mb-2">Select Ticket Type</label>
-            <select id="ticketTypeSelect" class="bg-yellow-300 py-2 px-4 rounded-lg w-full mb-2">
-                <!-- Options will be dynamically populated -->
-            </select>
-            <div class="flex items-center space-x-2">
-                <button id="decrease" class="bg-gray-300 text-gray-700 py-1 px-2 rounded">-</button>
-                <span id="ticketCount">1</span>
-                <button id="increase" class="bg-gray-300 text-gray-700 py-1 px-2 rounded">+</button>
-            </div>
-            <p class="mt-2 text-gray-600">Total price Rs. <span id="totalPrice">0</span></p>
-        </div>
+<!-- Ticket Type -->
+<div class="mb-4">
+<label for="ticketTypeSelect" class="block text-gray-700 font-bold mb-2">Select Ticket Type</label>
+<select id="ticketTypeSelect" class="bg-yellow-300 py-2 px-4 rounded-lg w-full mb-2">
+    <!-- Options will be dynamically populated -->
+</select>
+<div class="flex items-center space-x-2">
+    <button id="decrease" class="bg-gray-300 text-gray-700 py-1 px-2 rounded">-</button>
+    <span id="ticketCount">1</span>
+    <button id="increase" class="bg-gray-300 text-gray-700 py-1 px-2 rounded">+</button>
+</div>
+<p class="mt-2 text-gray-600">Total price Rs. <span id="totalPrice">0.00</span></p>
+</div>
 
+<!-- User Details -->
+<div class="mb-4">
+<input type="text" class="w-full border border-gray-300 rounded py-2 px-3 mb-2" placeholder="Name" name="userName" id="userName">
+<input type="email" class="w-full border border-gray-300 rounded py-2 px-3 mb-2" placeholder="Email address" id="userEmail">
+</div>
 
-          <!-- User Details -->
-          <div class="mb-4">
-            <input type="text" class="w-full border border-gray-300 rounded py-2 px-3 mb-2" placeholder="Name" name="userName" id="userName">
-            <input type="email" class="w-full border border-gray-300 rounded py-2 px-3 mb-2" placeholder="Email address" id="userEmail">
-          </div>
-
-          <!-- Country and Phone Number -->
-          <div class="mb-4 flex items-center space-x-2">
-            <div class="w-full">
-              <label for="country" class="block text-gray-700 font-bold mb-1">Country</label>
-              <div class="flex items-center space-x-2">
-                <img src="https://flagcdn.com/w40/np.png" alt="Nepal" class="w-6 h-6">
-                <span>Nepal</span>
-              </div>
-            </div>
-            <div class="w-full">
-              <label for="phone" class="block text-gray-700 font-bold mb-1">Phone Number</label>
-              <div class="flex">
-                <input type="text" class="border border-gray-300 rounded-r py-2 px-3" placeholder="Enter phone number" id="userPhoneNumber">
-              </div>
-            </div>
-          </div>
-        </form>
-         <!-- Action Buttons -->
-          <div class="flex justify-between">
-            <button id="cancelBtn" class="bg-gray-300 text-gray-700 py-2 px-4 rounded-md">Cancel</button>
-            <button type="button" id="bookBtn" class="bg-blue-500 text-white py-2 px-4 rounded-md">Book</button>
-          </div>
-        </div>
-      </div>
+<!-- Country and Phone Number -->
+<div class="mb-4 flex items-center space-x-2">
+<div class="w-full">
+    <label for="country" class="block text-gray-700 font-bold mb-1">Country</label>
+    <div class="flex items-center space-x-2">
+        <img src="https://flagcdn.com/w40/np.png" alt="Nepal" class="w-6 h-6">
+        <span>Nepal</span>
+    </div>
+</div>
+<div class="w-full">
+    <label for="phone" class="block text-gray-700 font-bold mb-1">Phone Number</label>
+    <div class="flex">
+        <input type="text" class="border border-gray-300 rounded-r py-2 px-3" placeholder="Enter phone number" id="userPhoneNumber">
+    </div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex justify-between">
+<button id="cancelBtn" class="bg-gray-300 text-gray-700 py-2 px-4 rounded-md">Cancel</button>
+<button type="button" id="bookBtn" class="bg-blue-500 text-white py-2 px-4 rounded-md">Book</button>
+</div>
+</form>
+</div>
+</div>
 @endauth
+
 
 
 

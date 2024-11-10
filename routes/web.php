@@ -3,7 +3,6 @@
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\User\UserTicketController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Contracts\Session\Session;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ProfileUpdateController;
 use App\Http\Controllers\Vendor\EventController;
@@ -24,6 +23,9 @@ use App\Http\Controllers\Vendor\EventTransactionController;
 */
 
 
+// Route::view('purchaseTicket', 'user.purchaseTicket');
+
+
 // Landing page
 Route::get('setlang/{lang}', function($lang) {
     Session(['lang'=> $lang]);
@@ -33,7 +35,6 @@ Route::get('setlang/{lang}', function($lang) {
 Route::controller(LandingPageController::class)->group(function(){
     Route::get('/','showEvent');
     Route::get('/event/detail/{id}', 'eventDetail')->name('landingPage.event.detail');
-    // Route::get('/', 'eventSearch')->name('landingpage.event.search');
 });
 
 
@@ -139,6 +140,9 @@ Route::middleware(['checkAdmin'])->group(function(){
 
 
             Route::get('/event/search', 'eventSearch')->name('superadmin.event.search');
+
+            Route::get('/user/search', 'userSearch')->name('superadmin.user.search');
+
 
         });
     });

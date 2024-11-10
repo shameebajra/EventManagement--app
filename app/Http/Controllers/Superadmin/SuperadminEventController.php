@@ -15,117 +15,131 @@ use Illuminate\Support\Facades\Log;
 
 class SuperadminEventController extends Controller
 {
+
+
     /**
-     * Display a listing of the resource.
+     * Display at dashboard
      */
-
-     public function index(){
-        $usersCount = User::where('role_id', 3)->count();
-        $vendorsCount = User::where('role_id', 2)->count();
-        $tickets=PurchasedTicket::all();
-
-
-        return view('superadmin.dashboard', compact('usersCount','vendorsCount','tickets'));
-     }
-    public function getEvents()
+    public function index()
     {
-        $events= Event::all();
-        return view('superadmin.events',compact('events'));
+        try {
+            $transactions = PurchasedTicket::with(['ticketTypes.event'])
+                ->latest()
+                ->paginate(20);
+
+            $events = Event::with('user')->latest()->get();
+
+            $totalEvents = Event::count();
+            $totalTicketSales = PurchasedTicket::sum('total');
+            $totalTicketSold = PurchasedTicket::count();
+
+            return view('superadmin.dashboard', compact('transactions', 'totalEvents', 'events', 'totalTicketSales', 'totalTicketSold'));
+        } catch (Exception $e) {
+            Log::error('Transactions error: ' . $e->getMessage());
+            return response()->json(['error' => 'An unexpected error occurred. Please try again later.'], 500);
+        }
     }
 
+    /**
+     * Retrieve and display all events.
+     */
+    public function getEvents()
+    {
+        try {
+            $events = Event::paginate(10);
+            return view('superadmin.events', compact('events'));
+        } catch (Exception $e) {
+            Log::error('Error fetching events: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to retrieve events.');
+        }
+    }
+
+    /**
+     * Show event details along with associated ticket types.
+     */
     public function showEventDetail(string $id)
     {
-        try{
-        $event = Event::with('ticketTypes')->findOrFail($id);
-        $ticketTypes = TicketType::where('event_id', $event->id)->get();
+        try {
+            $event = Event::with('ticketTypes')->findOrFail($id);
+            $ticketTypes = TicketType::where('event_id', $event->id)->get();
 
-        return view('superadmin.eventDetail',compact('event','ticketTypes'));
+            return view('superadmin.eventDetail', compact('event', 'ticketTypes'));
         } catch (ModelNotFoundException $e) {
             Log::error('Event not found: ' . $e->getMessage());
-
             return redirect()->back()->with('error', 'Event not found!');
         } catch (QueryException $e) {
             Log::error('Database error: ' . $e->getMessage());
-
             return redirect()->back()->with('error', 'There was an issue retrieving the event. Please try again later.');
         }
-
     }
 
-
+    /**
+     * Retrieve and display all users with specific roles.
+     */
     public function getUsers()
     {
-        $users = User::whereIn('role_id', [2, 3])->get();
-        return view('superadmin.users',compact('users'));
+        try {
+            $users = User::whereIn('role_id', [2, 3])->paginate(10);
+            return view('superadmin.users', compact('users'));
+        } catch (Exception $e) {
+            Log::error('Error fetching users: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to retrieve users.');
+        }
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
+     * Delete an event by its ID.
      */
     public function destroy(string $id)
     {
-        try{
+        try {
             $event = Event::findOrFail($id);
             $event->delete();
-            return redirect()->back()->with('success', value: 'Event deleted successfully!');
-
-        }catch(Exception $e){
+            return redirect()->back()->with('success', 'Event deleted successfully!');
+        } catch (ModelNotFoundException $e) {
+            Log::error('Event not found for deletion: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Event not found!');
+        } catch (Exception $e) {
             Log::error('Failed event deletion: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Event deletion unsuccessful!');
         }
-
     }
 
-    public function eventSearch(Request $request){
+    /**
+     * Search for events by name or type.
+     */
+    public function eventSearch(Request $request)
+    {
         try {
-        $search = $request->input('search');
+            $search = $request->input('search');
 
-        $events= Event::where('event_name', 'ilike', "%{$search}%")
-        ->orWhere('event_type', 'ilike', "%{$search}%")->latest('updated_at')->get();
+            $events = Event::where('event_name', 'ilike', "%{$search}%")
+                ->orWhere('event_type', 'ilike', "%{$search}%")
+                ->latest('updated_at')
+                ->paginate(10);
 
-        return view('superadmin.events', compact('events'))->with('search', $search);
-        }catch (Exception $e){
+            return view('superadmin.events', compact('events'))->with('search', $search);
+        } catch (Exception $e) {
+            Log::error('Event search error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Event search failed!');
+        }
+    }
+
+
+    public function userSearch(Request $request)
+    {
+        try {
+            $search = $request->input('search');
+
+            $users = User::where('name', 'ilike', "%{$search}%")
+                ->orWhere('email', 'ilike', "%{$search}%")
+                ->orWhere('phone_number', 'ilike', "%{$search}%")
+                ->latest('updated_at')
+                ->paginate(10);
+            return view('superadmin.users', compact('users'))->with('search', $search);
+        } catch (Exception $e) {
+            Log::error('User search error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'User search failed!');
         }
     }
 }
