@@ -15,7 +15,7 @@ class RegisterController extends Controller
 
     public function register(RegisterRequest $request){
 
-
+       // Check the route and assign role
         $roleId = null;
         if ($request->is('register')) {
             $roleId = 3;
@@ -27,7 +27,8 @@ class RegisterController extends Controller
 
 
         try {
-                 if ($roleId !== null) {
+                if ($roleId !== null) {
+                    //create user
                 User::create([
                     'email' => $request->email,
                     'name'=> $request->name,
@@ -36,6 +37,7 @@ class RegisterController extends Controller
                     'role_id' => $roleId,
                 ]);
 
+                //redirect user according to route
                 if ($request->is('register/super-admin')) {
                     return redirect('/register/super-admin')->with('success', 'Registration successful! Please log in.');
                 } elseif ($request->is('register/vendor')) {

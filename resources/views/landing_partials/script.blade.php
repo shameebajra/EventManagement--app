@@ -14,7 +14,7 @@
             $('#bookingModal').removeClass('hidden');
 
             // Set initial ticket quantity to 1 and total price to 0.00
-            $('#ticketCount').text(1);
+            $('#ticketQuantity').val(1);
             $('#totalPrice').text('0.00');
 
             $.ajax({
@@ -63,35 +63,22 @@
             });
         });
 
-        // Update total price when ticket type or count changes
+        // Update total price when ticket type or quantity changes
         $('#ticketTypeSelect').on('change', function() {
-            const selectedOption = $('#ticketTypeSelect option:selected');
-            const selectedPrice = parseFloat(selectedOption.data('price'));
-            const ticketCount = parseInt($('#ticketCount').text());
-            $('#totalPrice').text((selectedPrice * ticketCount).toFixed(2));
+            updateTotalPrice(); // Call updateTotalPrice to recalculate the total when ticket type changes
+
         });
 
-        // Increase ticket count
-        $('#increase').on('click', function(event) {
-            event.preventDefault(); // Prevent default button behavior
-            let count = parseInt($('#ticketCount').text());
-            if (!isNaN(count)) {
-                count++; // Increment the count by 1
-                $('#ticketCount').text(count);  // Update quantity display
-                updateTotalPrice();
-            }
+
+       // when page load the ticketQuality isdisable at first
+        $('#ticketQuantity').prop('disabled', true);
+
+
+        // Increase ticket quantity
+        $('#ticketQuantity').on('click', function(event) {
+            updateTotalPrice();
         });
 
-        // Decrease ticket count
-        $('#decrease').on('click', function(event) {
-            event.preventDefault(); // Prevent default button behavior
-            let count = parseInt($('#ticketCount').text());
-            if (count > 1) {  // Ensure quantity does not go below 1
-                count--; // Decrement the count by 1
-                $('#ticketCount').text(count);  // Update quantity display
-                updateTotalPrice();
-            }
-        });
 
         // Close modal
         $('#closeModalBtn, #cancelBtn').on('click', function() {
@@ -107,7 +94,7 @@
             const selectedOption = $('#ticketTypeSelect option:selected');
             const ticketId = selectedOption.data('ticket-id');
             const ticketType = selectedOption.data('ticket-type');
-            const quantity = parseInt($('#ticketCount').text());
+            const quantity = parseInt($('#ticketQuantity').val());
             const totalPrice = parseFloat($('#totalPrice').text());
 
             const formData = {
@@ -147,12 +134,21 @@
             });
         });
 
-        // Update total price
+        // Update total price function
         function updateTotalPrice() {
             const selectedOption = $('#ticketTypeSelect option:selected');
             const selectedPrice = parseFloat(selectedOption.data('price'));
-            const ticketCount = parseInt($('#ticketCount').text());
-            $('#totalPrice').text((selectedPrice * ticketCount).toFixed(2));
+            const ticketQuantity = parseInt($('#ticketQuantity').val());
+
+            if (!isNaN(selectedPrice) && ticketQuantity > 0) {
+        $('#totalPrice').text((selectedPrice * ticketQuantity).toFixed(2));
+        $('#ticketQuantity').prop('disabled', false);
+    } else {
+
+        $('#totalPrice').text('0.00');
+        $('#ticketQuantity').prop('disabled', true);
+    }
+
         }
     });
 </script>

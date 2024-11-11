@@ -16,7 +16,6 @@ class ProfileUpdateController extends Controller
 
             $id = session('user_id');
 
-            // Ensure user exists in the database
             $user = User::findOrFail($id);
 
             // Update user data

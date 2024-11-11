@@ -50,7 +50,7 @@ class EventController extends Controller
                 'user_id' => $user_id,
             ]);
 
-            // Create ticket types
+            //Loops through each request and save it
             foreach ($request->ticket_types as $ticket) {
                 TicketType::create([
                     'event_id' => $event->id,
@@ -81,9 +81,15 @@ class EventController extends Controller
      */
     public function show()
     {
-        $events = Event::where('user_id',session('user_id'))->latest('updated_at')->first()->paginate(10);
+        try{
+        $events = Event::where('user_id',session('user_id'))->latest('updated_at')->paginate(10);
 
         return view('vendor.events', compact('events'));
+        }catch (Exception $e) {
+            Log::error('Failed event display: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Event display unsuccessful!');
+        }
     }
 
     public function showEventDetail(string $id)
@@ -153,14 +159,14 @@ class EventController extends Controller
                 return redirect()->back()->with('error', 'Unauthorized action. You cannot update this event.');
             }
 
-            // Handling poster upload
+
             if ($request->hasFile('poster')) {
                 $poster = $request->file('poster');
                 $extension = $poster->getClientOriginalExtension();
                 $posterName = time() . '.' . $extension;
                 $poster->move(public_path('/images/eventPoster'), $posterName);
 
-                // If a new poster is uploaded, delete the old one
+                // delete old poster if new uploaded
                 if ($event->poster && $event->poster !== "0.png") {
                     $oldPosterPath = public_path('/images/eventPoster/' . $event->poster);
                     if (file_exists($oldPosterPath)) {
@@ -168,11 +174,11 @@ class EventController extends Controller
                     }
                 }
             } else {
-                // Keep the old poster if no new poster is uploaded
+                // Keep the old poster
                 $posterName = $event->poster;
             }
 
-            // Update event
+
             $event->update([
                 'event_name'    => $request->event_name,
                 'event_type'    => $request->event_type,
@@ -189,11 +195,10 @@ class EventController extends Controller
             // Update ticket types
             $existingTicketIds = [];
 
-            // Loop through ticket types to update or create
+
             foreach ($request->ticket_types as $ticket) {
                 if (isset($ticket['id'])) {
-                    // Existing ticket, update it
-                    $ticketType = TicketType::where('id', $ticket['id'])
+                        $ticketType = TicketType::where('id', $ticket['id'])
                         ->where('event_id', $event->id)
                         ->first();
 
@@ -208,7 +213,7 @@ class EventController extends Controller
                     // Add the updated ticket ID to the existing array
                     $existingTicketIds[] = $ticket['id'];
                 } else {
-                    // Create a new ticket if it doesn't already exist
+                    // Create a new ticket
                     $newTicketType = TicketType::create([
                         'event_id'    => $event->id,
                         'ticket_type' => $ticket['ticket_type'],
@@ -216,12 +221,10 @@ class EventController extends Controller
                         'price'       => $ticket['price'],
                     ]);
 
-                    // Keep track of the newly created ticket ID
                     $existingTicketIds[] = $newTicketType->id;
                 }
             }
 
-            // Delete any ticket types that were not included in the request
             TicketType::where('event_id', $event->id)
                 ->whereNotIn('id', $existingTicketIds)
                 ->delete();
@@ -328,9 +331,6 @@ class EventController extends Controller
                                     $query->where('id', $id);
                                 })
                                 ->sum('quantity');
-
-            // $eventTickets = TicketType::where('id', $id)->sum('quantity');
-            // $remainingTickets = $totalSoldTickets-$eventTickets;
 
             $totalEarned = PurchasedTicket::with(['ticketTypes', 'ticketTypes.event'])
                             ->whereHas('ticketTypes.event', function($query) use ($id) {

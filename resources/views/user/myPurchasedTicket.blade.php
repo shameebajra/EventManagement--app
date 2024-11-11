@@ -54,9 +54,7 @@
                         <div class="time">
                             <p>DOORS <span>@</span> {{ \Carbon\Carbon::parse($purchasedTicket->ticketTypes->event->time)->format('g:i A') }}</p>
                         </div>
-                        <div class="barcode">
-                            <img src="https://external-preview.redd.it/cg8k976AV52mDvDb5jDVJABPrSZ3tpi1aXhPjgcDTbw.png?auto=webp&s=1c205ba303c1fa0370b813ea83b9e1bddb7215eb" alt="QR code">
-                        </div>
+
                         <p class="ticket-number">#{{ $purchasedTicket->id }}</p>
                     </div>
 

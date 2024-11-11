@@ -92,7 +92,7 @@ Route::middleware(['checkUser'])->group(function(){
 // Vendor Routes
 Route::middleware(['checkVendor'])->group(function() {
     Route::prefix('vendor')->group(function() {
-        Route::view('/events', 'vendor.events');
+
         Route::view('/add/events', 'vendor.addEvents');
         Route::view('/events/detail', 'vendor.eventDetail');
 
